@@ -4,13 +4,17 @@ const { DBConnection } = require('./databse/db');
 const User = require('./models/User');
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
+const jwt = require("jsonwebtoken");
 
-app.use(cors());
+app.use(cors({
+    origin: true,
+    credentials: true
+}));
 
-DBConnection();
 // middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+DBConnection();
 app.get("/", (req, res) => {
     res.send("Hello, World!");
 });
@@ -20,13 +24,13 @@ app.post("/register", async (req, res) => {
         const { firstName, lastName, email, password, phone } = req.body;
 
         // check if the user already exists  (we need database)
-        const existingUser = await User.findOne({ email});
+        const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).send({message:`User already exists with the given email`});   
+            return res.status(400).send({ message: `User already exists with the given email` });
         }
-        const existingUser1 = await User.findOne({ phone});
+        const existingUser1 = await User.findOne({ phone });
         if (existingUser1) {
-            return res.status(400).send({message:`User already exists with the given phone no.`});   
+            return res.status(400).send({ message: `User already exists with the given phone no.` });
         }
         if (!firstName || !lastName || !email || !password) {
             return res.status(400).json({ message: 'Please enter all fields' });
@@ -71,11 +75,64 @@ app.post("/register", async (req, res) => {
         // save the user to the database
         await user.save();
 
-        res.status(201).json({ message: "User registered successfully", user });
+        res.status(201).json({
+            success: true,
+            message: "User registered successfully", user
+        });
 
     } catch (error) {
         console.error(error.message);
-        res.status(500).json({ message: "Server error. Please try again later." });
+        res.status(500).json({
+            message: "Server error. Please try again later."
+        });
+    }
+});
+
+app.post("/login", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        // Basic validation
+        const errors = [];
+        if (!email) errors.push("email");
+        if (!password) errors.push("password");
+        if (errors.length > 0) {
+            return res.status(400).json({ message: `Please provide ${errors.join(" and ")}` });
+        }
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: "User does not exists with the given email" });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: "Incorrect password" });
+        }
+
+        // generate and send the JWT token
+        const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+
+        const userResponse = {
+            _id: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            createdAt: user.createdAt
+        };
+
+        res.status(200).json({
+            success: true,
+            message: "Login successful",
+            token:token,
+            user: userResponse
+        });
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error during login"
+        });
     }
 });
 app.listen(process.env.PORT, () => {
