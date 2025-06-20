@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import {Link } from'react-router-dom';
 function Register() {
     const [formData, setFormData] = useState({
         firstName: '',
@@ -107,6 +108,7 @@ function Register() {
                     </button>
                 </form>
                 {message && <p className="mt-4 text-center text-sm text-red-600">{message}</p>  }
+                <p className='mt-4  text-center '>Already registered? <Link to="/login" className='text-blue-400 underline hover:text-blue-800'>Login</Link></p>
             </div>
         </div>
     );
