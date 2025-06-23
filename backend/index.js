@@ -7,7 +7,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 app.use(cors({
-    origin: true,
+    origin: ['http://localhost:5173'],
     credentials: true
 }));
 
