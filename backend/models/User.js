@@ -54,7 +54,11 @@ const userSchema = new mongoose.Schema({
       ref: 'Problem',
       default: 0
     }
-  ]
+  ],
+  isAdmin: {
+    type: Boolean,
+    default: false
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

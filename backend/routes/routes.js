@@ -2,7 +2,8 @@ const express = require('express')
 const router = express.Router()
 const { loginCode, registerCode } = require('../controllers/authController');
 const isAuthenticated = require('../middlewares/isAuthenticated');
-const { getAllProblems, addProblem ,updateProblem, deleteProblem } = require('../controllers/problemController');
+const { getAllProblems, addProblem, updateProblem, deleteProblem, getProblemById } = require('../controllers/problemController');
+const isAdmin = require('../middlewares/isAdmin');
 
 router.post('/login', loginCode);
 
@@ -14,10 +15,12 @@ router.get("/verify", isAuthenticated, (req, res) => {
 
 router.get("/problems", getAllProblems);
 
-router.post("/problems", isAuthenticated, addProblem);
+router.get('/problems/:id', isAuthenticated, isAdmin, getProblemById);
 
-router.put("/problems/:id", isAuthenticated, updateProblem);
+router.post("/problems", isAuthenticated, isAdmin, addProblem);
 
-router.delete("/problems/:id", isAuthenticated, deleteProblem);
+router.put("/problems/:id", isAuthenticated, isAdmin, updateProblem);
+
+router.delete("/problems/:id", isAuthenticated, isAdmin, deleteProblem);
 
 module.exports = router;

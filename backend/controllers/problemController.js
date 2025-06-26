@@ -98,4 +98,30 @@ const deleteProblem = async (req, res) => {
         });
     }
 };
-module.exports = { getAllProblems, addProblem, updateProblem , deleteProblem };
+
+const getProblemById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const problem = await Problem.findById(id);
+
+    if (!problem) {
+      return res.status(404).json({
+        success: false,
+        message: 'Problem not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      problem
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error while fetching problem',
+      error: error.message
+    });
+  }
+};
+
+module.exports = { getAllProblems, addProblem, updateProblem , deleteProblem ,getProblemById };

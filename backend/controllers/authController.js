@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
+const isAdmin = require('../middlewares/isAdmin');
 
 const loginCode = async (req, res) => {
     try {
@@ -24,14 +25,16 @@ const loginCode = async (req, res) => {
         }
 
         // generate and send the JWT token
-        const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user._id ,isAdmin: user.isAdmin,}, process.env.SECRET_KEY, { expiresIn: '1h' });
 
         const userResponse = {
             _id: user._id,
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            createdAt: user.createdAt
+            createdAt: user.createdAt,
+            phone: user.phone,
+            isAdmin: user.isAdmin,
         };
 
         res.status(200).json({
