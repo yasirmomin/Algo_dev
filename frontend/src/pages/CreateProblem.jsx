@@ -57,7 +57,7 @@ function CreateProblem() {
             className="w-full border px-3 py-2 rounded"
             value={formData.title}
             onChange={handleChange}
-            required="true"
+            required
           />
         </div>
 
@@ -68,7 +68,7 @@ function CreateProblem() {
             className="w-full border px-3 py-2 rounded"
             value={formData.statement}
             onChange={handleChange}
-            required="true"
+            required
             rows="4"
           />
         </div>
@@ -80,7 +80,7 @@ function CreateProblem() {
             className="w-full border px-3 py-2 rounded"
             value={formData.difficulty}
             onChange={handleChange}
-            required="true"
+            required
           >
             <option value="">-- Select --</option>
             <option value="Easy">Easy</option>

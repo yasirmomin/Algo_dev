@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -9,7 +8,6 @@ function Login() {
     password: ''
   });
   const [message, setMessage] = useState('');
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,8 +23,8 @@ function Login() {
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
       if (res.status === 200) {
+        setTimeout(() => window.location.href = "/", 1500);
         setMessage("Login successfull !");
-        setTimeout(() => navigate('/'), 1500);
       }
     } catch (error) {
       if (error.response) {
