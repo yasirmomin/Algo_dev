@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const { DBConnection } = require('./databse/db');
+const { DBConnection } = require('./database/db');
 const cors = require('cors');
 const router  = require('./routes/routes');
 const dotenv = require('dotenv');

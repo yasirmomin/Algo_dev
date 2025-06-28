@@ -9,6 +9,7 @@ import Profile from './pages/Profile';
 import Problems from './pages/Problems';
 import CreateProblem from './pages/CreateProblem';
 import UpdateProblem from './pages/UpdateProblem';
+import ProblemPage from './pages/ProblemPage';
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
         <Route path='/edit-problem/:id' element={
           <ProtectedRoutes><UpdateProblem /></ProtectedRoutes>
         } />
+        <Route path='/problems/:id' element={<ProblemPage/>}/>
       </Routes>
     </Router>
 

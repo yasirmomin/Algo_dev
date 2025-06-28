@@ -65,22 +65,31 @@ function Problems() {
                             <p className="text-sm"><strong>Difficulty:</strong> {problem.difficulty}</p>
                             <p className="text-sm text-gray-500">Tags: {problem.tags.join(", ")}</p>
 
-                            {isAdmin && (
-                                <div className="mt-2 space-x-2">
-                                    <button
-                                        className="bg-yellow-400 text-black px-3 py-1 rounded hover:bg-yellow-500"
-                                        onClick={() => navigate(`/edit-problem/${problem._id}`)}
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                                        onClick={() => handleDelete(problem._id)}
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-                            )}
+                            <div className="mt-3 flex flex-wrap gap-2">
+                                <button
+                                    className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+                                    onClick={() => navigate(`/problems/${problem._id}`)}
+                                >
+                                    View Problem
+                                </button>
+
+                                {isAdmin && (
+                                    <>
+                                        <button
+                                            className="bg-yellow-400 text-black px-3 py-1 rounded hover:bg-yellow-500"
+                                            onClick={() => navigate(`/edit-problem/${problem._id}`)}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                                            onClick={() => handleDelete(problem._id)}
+                                        >
+                                            Delete
+                                        </button>
+                                    </>
+                                )}
+                            </div>
 
                         </li>
                     ))}

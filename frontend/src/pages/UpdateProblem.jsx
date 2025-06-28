@@ -28,7 +28,7 @@ function UpdateProblem() {
           title,
           statement,
           difficulty,
-          tags: tags.join(', ') // convert array to string
+          tags: tags.join(', ') 
         });
       } catch (err) {
         console.error("❌ Error fetching problem:", err);

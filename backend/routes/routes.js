@@ -15,7 +15,7 @@ router.get("/verify", isAuthenticated, (req, res) => {
 
 router.get("/problems", getAllProblems);
 
-router.get('/problems/:id', isAuthenticated, isAdmin, getProblemById);
+router.get('/problems/:id', getProblemById);
 
 router.post("/problems", isAuthenticated, isAdmin, addProblem);
 
