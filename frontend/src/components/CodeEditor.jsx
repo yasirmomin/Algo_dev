@@ -1,10 +1,10 @@
-import {Editor} from '@monaco-editor/react';
+import { Editor } from "@monaco-editor/react";
+
 function CodeEditor({ code, setCode, language }) {
   return (
-    <div className="border rounded shadow mt-4 ">
+    <div className="rounded-xl shadow-md border border-gray-300 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-900">
       <Editor
         height="60vh"
-        width="1000px"
         defaultLanguage={language}
         language={language}
         value={code}
@@ -12,8 +12,18 @@ function CodeEditor({ code, setCode, language }) {
         theme="vs-dark"
         options={{
           fontSize: 18,
+          fontFamily: "Fira Code, monospace",
           minimap: { enabled: false },
+          wordWrap: "on",
+          wrappingIndent: "indent",
+          smoothScrolling: true,
+          tabSize: 2,
           automaticLayout: true,
+          lineNumbers: "on",
+          renderLineHighlight: "all",
+          fixedOverflowWidgets: true,
+          bracketPairColorization: true,
+          cursorSmoothCaretAnimation: true,
         }}
       />
     </div>
