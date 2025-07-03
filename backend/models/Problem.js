@@ -5,6 +5,12 @@ const problemSchema = new mongoose.Schema({
   statement: { type: String, required: true },
   difficulty: { type: String, enum: ['Easy', 'Medium', 'Hard'], required: true },
   tags: [String],
+  testCases: [
+    {
+      input: String,
+      output: String,
+    }
+  ],
   createdAt: { type: Date, default: Date.now }
 });
 

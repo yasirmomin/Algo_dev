@@ -7,8 +7,9 @@ function Problems() {
   const [problems, setProblems] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(true);
   const fetchProblems = async () => {
+
     try {
       const res = await axios.get("http://localhost:3000/problems");
       setProblems(res.data.problems);
@@ -18,6 +19,7 @@ function Problems() {
         error.response?.data?.message || error.message
       );
     }
+    setLoading(false);
   };
 
   const handleDelete = async (id) => {
@@ -86,8 +88,10 @@ function Problems() {
             </button>
           )}
         </div>
-
-        {problems.length === 0 ? (
+        {loading ? (
+          <p className="text-gray-600 dark:text-gray-300">Loading problems...</p>
+        ) : 
+        (problems.length === 0 ? (
           <p className="text-gray-600 dark:text-gray-300">No problems found.</p>
         ) : (
           <div className="overflow-x-auto rounded-lg shadow border dark:border-gray-700">
@@ -163,7 +167,7 @@ function Problems() {
               </tbody>
             </table>
           </div>
-        )}
+        ))}
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ const isAuthenticated = require('../middlewares/isAuthenticated');
 const { getAllProblems, addProblem, updateProblem, deleteProblem, getProblemById } = require('../controllers/problemController');
 const isAdmin = require('../middlewares/isAdmin');
 const { searchUsers, addFriend, getMyProfile, getUserById, getFriends, removeFriend } = require('../controllers/userController');
+const { submitCode } = require('../controllers/submissionController');
 
 router.post('/login', loginCode);
 
@@ -37,5 +38,7 @@ router.get("/user/:id", isAuthenticated, getUserById);
 
 router.post("/user/remove-friend/:id", isAuthenticated, removeFriend);
 
+
+router.post("/submit", isAuthenticated, submitCode);
 
 module.exports = router;
