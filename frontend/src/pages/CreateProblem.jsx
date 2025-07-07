@@ -2,6 +2,22 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const TAG_OPTIONS = [
+  "Array",
+  "Dynamic Programming",
+  "Graph",
+  "Greedy",
+  "Sortings",
+  "Math",
+  "String",
+  "Two Pointers",
+  "Binary Search",
+  "Tree",
+  "Stack",
+  "Queue",
+  "Hashing"
+];
+
 function CreateProblem() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -13,6 +29,7 @@ function CreateProblem() {
     constraints: ['']
   });
   const [message, setMessage] = useState('');
+  const [tags, setTags] = useState([]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -79,7 +96,7 @@ function CreateProblem() {
           ...formData,
           title: formData.title.trim(),
           statement: formData.statement.trim(),
-          tags: formData.tags.split(',').map(tag => tag.trim()),
+          tags,
           testCases: validTestCases,
           constraints: formData.constraints.filter(c => c.trim() !== '')
         },
@@ -204,8 +221,8 @@ function CreateProblem() {
                     <span className="ml-2 text-sm dark:text-gray-300">Hidden Test Case</span>
                   </label>
 
-                <div></div>
-                
+                  <div></div>
+
                   <button
                     type="button"
                     onClick={() => removeTestCase(index)}
@@ -263,13 +280,29 @@ function CreateProblem() {
               </button>
             </div>
 
-            <input
-              name="tags"
-              placeholder="Tags (comma-separated)"
-              value={formData.tags}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            />
+            <label className="block mb-2 dark:text-gray-200 font-medium">Tags:</label>
+            <div className="grid grid-cols-2 gap-2 border rounded p-2 dark:bg-gray-800 dark:text-white">
+              {TAG_OPTIONS.map(tag => (
+                <label key={tag} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    value={tag}
+                    checked={tags.includes(tag)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setTags(prev => [...prev, tag]);
+                      } else {
+                        setTags(prev => prev.filter(t => t !== tag));
+                      }
+                    }}
+                    className="accent-indigo-600"
+                  />
+                  <span>{tag}</span>
+                </label>
+              ))}
+            </div>
+
+
 
             <button
               type="submit"

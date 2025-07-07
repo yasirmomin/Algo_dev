@@ -2,17 +2,29 @@ const Problem = require('../models/Problem');
 
 const getAllProblems = async (req, res) => {
     try {
-        const problem = await Problem.find();
+        const { difficulty, tags } = req.query;
+        const filter = {};
+
+        if (difficulty) {
+            filter.difficulty = difficulty;
+        }
+
+        if (tags) {
+            // tags=Array,Dynamic Programming
+            const tagsArray = tags.split(',').map((t) => t.trim());
+            filter.tags = { $all: tagsArray };
+        }
+        const problems = await Problem.find(filter).sort({ createdAt: -1 });
         res.status(200).json({
             success: true,
             message: "All problems fetched successfully",
-            problems: problem
+            problems
         });
-    } catch (error) {
+    } catch (err) {
         res.status(500).json({
             success: false,
             message: "Internal server error while fetching problems",
-            error: error.message
+            error: err.message
         });
     }
 };
@@ -51,7 +63,7 @@ const addProblem = async (req, res) => {
 const updateProblem = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, statement, difficulty, tags , testCases, constraints} = req.body;
+        const { title, statement, difficulty, tags, testCases, constraints } = req.body;
         if (!title || !statement || !difficulty) {
             return res.status(400).json({ message: "Please fill all required fields" });
         }
@@ -104,28 +116,28 @@ const deleteProblem = async (req, res) => {
 };
 
 const getProblemById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const problem = await Problem.findById(id);
+    try {
+        const { id } = req.params;
+        const problem = await Problem.findById(id);
 
-    if (!problem) {
-      return res.status(404).json({
-        success: false,
-        message: 'Problem not found'
-      });
+        if (!problem) {
+            return res.status(404).json({
+                success: false,
+                message: 'Problem not found'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            problem
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error while fetching problem',
+            error: error.message
+        });
     }
-
-    res.status(200).json({
-      success: true,
-      problem
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error while fetching problem',
-      error: error.message
-    });
-  }
 };
 
-module.exports = { getAllProblems, addProblem, updateProblem , deleteProblem ,getProblemById };
+module.exports = { getAllProblems, addProblem, updateProblem, deleteProblem, getProblemById };

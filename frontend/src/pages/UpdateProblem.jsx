@@ -2,6 +2,22 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
+const TAG_OPTIONS = [
+  "Array",
+  "Dynamic Programming",
+  "Graph",
+  "Greedy",
+  "Sortings",
+  "Math",
+  "String",
+  "Two Pointers",
+  "Binary Search",
+  "Tree",
+  "Stack",
+  "Queue",
+  "Hashing"
+];
+
 function UpdateProblem() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -14,6 +30,7 @@ function UpdateProblem() {
     constraints: ['']
   });
   const [message, setMessage] = useState('');
+  const [tags, setTags]=useState([]);
 
   useEffect(() => {
     const fetchProblem = async () => {
@@ -29,7 +46,7 @@ function UpdateProblem() {
           title,
           statement,
           difficulty,
-          tags: tags.join(', '),
+          tags,
           testCases: testCases.map(tc => ({
             input: tc.input,
             output: tc.output,
@@ -38,6 +55,8 @@ function UpdateProblem() {
           })),
           constraints: constraints && constraints.length > 0 ? constraints : ['']
         });
+
+        setTags(tags);
       } catch (err) {
         console.error("❌ Error fetching problem:", err);
         setMessage("Error loading problem details.");
@@ -113,7 +132,7 @@ function UpdateProblem() {
           ...formData,
           title: formData.title.trim(),
           statement: formData.statement.trim(),
-          tags: formData.tags.split(',').map(tag => tag.trim()),
+          tags: tags,
           testCases: validTestCases,
           constraints: validConstraints
         },
@@ -280,13 +299,27 @@ function UpdateProblem() {
               </button>
             </div>
 
-            <input
-              name="tags"
-              placeholder="Tags (comma-separated)"
-              value={formData.tags}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            />
+            <label className="block mb-2 dark:text-gray-200 font-medium">Tags:</label>
+            <div className="grid grid-cols-2 gap-2 border rounded p-2 dark:bg-gray-800 dark:text-white">
+              {TAG_OPTIONS.map(tag => (
+                <label key={tag} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    value={tag}
+                    checked={tags.includes(tag)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setTags(prev => [...prev, tag]);
+                      } else {
+                        setTags(prev => prev.filter(t => t !== tag));
+                      }
+                    }}
+                    className="accent-indigo-600"
+                  />
+                  <span>{tag}</span>
+                </label>
+              ))}
+            </div>
 
             <button
               type="submit"
