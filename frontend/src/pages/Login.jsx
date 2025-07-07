@@ -80,6 +80,15 @@ function Login() {
               Login
             </button>
           </form>
+          <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+            Don't have an account?{" "}
+            <a
+              href="/register"
+              className="text-indigo-600 dark:text-indigo-400 hover:underline"
+            >
+              Register here
+            </a>
+          </p>
         </div>
       </div>
     </div>

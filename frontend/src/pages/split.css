@@ -1,0 +1,11 @@
+.custom-split .gutter {
+  background: gray;
+  border-radius: 4px;
+  cursor: col-resize;
+  margin: 2px;
+}
+
+.custom-split .gutter:hover {
+  background: #084ada; 
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.6);
+}

@@ -21,17 +21,16 @@ const submitCode = async (req, res) => {
             });
         }
 
-        const testCases = problem.testCases;
         let verdict = "Accepted";
 
-
-        for (let testCase of testCases) {
+        for (let i = 0; i < problem.testCases.length; i++) {
+            const testCase = problem.testCases[i];
             try {
                 const response = await axios.post("http://localhost:8000/run", {
                     code,
                     language,
                     input: testCase.input,
-                },{
+                }, {
                     headers: {
                         Authorization: req.headers.authorization,
                     },
@@ -43,17 +42,16 @@ const submitCode = async (req, res) => {
                 const expectedOutput = testCase.output?.trim();
 
                 if (output !== expectedOutput) {
-                    verdict = "Wrong Answer";
+                    verdict = `Wrong Answer on Test Case ${i + 1}`;
                     break;
                 }
             }
             catch (err) {
 
-                let errorMessage = err.response?.data.message ||"Unknown Error";
+                let errorMessage = err.response?.data.message || "Unknown Error";
 
-                
                 if (errorMessage.includes("Time Limit Exceeded")) {
-                    verdict = "Time Limit Exceeded";
+                    verdict = `Time Limit Exceeded on Test Case ${i + 1}`;
                 } else if (errorMessage.includes("Compilation Error")) {
                     verdict = "Compilation Error";
                 } else if (errorMessage.includes("Runtime Error")) {
@@ -80,6 +78,7 @@ const submitCode = async (req, res) => {
         return res.json({
             success: true,
             verdict,
+            submissionId: submission._id
         });
     } catch (error) {
         console.error("Error in submitCode:", error);
@@ -87,4 +86,33 @@ const submitCode = async (req, res) => {
     }
 };
 
-module.exports = { submitCode };
+const getSubmissionById = async (req, res) => {
+  try {
+    const submission = await Submission.findById(req.params.submissionId).populate("problem");
+    if (!submission) {
+      return res.status(404).json({ message: "Submission not found." });
+    }
+    res.json({ submission });
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+
+const getSubmissionsForProblem = async (req, res) => {
+  try {
+    const submissions = await Submission.find({
+      problem: req.params.id,
+      user: req.user.id
+    }).sort({ createdAt: -1 });
+
+    res.json({ submissions });
+  } catch (err) {
+    console.error("Error fetching submissions:", err);
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+
+
+module.exports = { submitCode, getSubmissionById , getSubmissionsForProblem  };

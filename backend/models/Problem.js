@@ -5,10 +5,13 @@ const problemSchema = new mongoose.Schema({
   statement: { type: String, required: true },
   difficulty: { type: String, enum: ['Easy', 'Medium', 'Hard'], required: true },
   tags: [String],
+  constraints: [String],
   testCases: [
     {
       input: String,
       output: String,
+      explanation: String,
+      hidden: {type: Boolean, default: false}
     }
   ],
   createdAt: { type: Date, default: Date.now }

@@ -35,7 +35,8 @@ function Navbar() {
   };
 
   return (
-    <nav className="bg-white/60 dark:bg-gray-900/70 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 shadow-sm py-4 px-6 flex items-center justify-between">
+    <div className="bg-white/60 dark:bg-[#1E1E1E]  border-b border-gray-200 dark:border-gray-800 shadow-sm ">
+    <nav className=" py-4 px-6 flex items-center justify-between">
       <Link to="/" className="text-2xl font-extrabold tracking-tight text-indigo-600 dark:text-white">
         Online Judge
       </Link>
@@ -79,6 +80,7 @@ function Navbar() {
               Logout
             </button>
           </>
+          
         )}
 
         <button
@@ -96,10 +98,11 @@ function Navbar() {
           }}
           className="border px-3 py-1 rounded-full dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
         >
-          {isDark ? "🌞 Light" : "🌙 Dark"}
+          {isDark ? "🌙 Dark" : "☀️ Light"}
         </button>
       </div>
     </nav>
+    </div>
   );
 }
 

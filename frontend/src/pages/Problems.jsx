@@ -72,10 +72,15 @@ function Problems() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-white via-indigo-50 to-blue-50 dark:from-[#1e1b4b] dark:to-[#0f0c29] py-10">
+    <div className="min-h-screen w-full bg-gradient-to-br 
+  from-[#5896ed] via-45% via-[#dcd5e2] to-[#ff7ea7]
+  dark:from-[rgba(187,5,111,0.88)] dark:via-45%  dark:via-[#111012]  dark:to-[#0231b1df]
+  bg-fixed
+  py-10">
+
       <div className="max-w-5xl mx-auto px-4">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-blue-300 to-purple-500 bg-clip-text text-transparent">
+          <h1 className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-blue-700 to-purple-700 dark:from-blue-300 dark:to-purple-300  bg-clip-text text-transparent">
             All Problems
           </h1>
           {isAdmin && (
