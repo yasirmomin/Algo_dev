@@ -87,47 +87,63 @@ export default function UserPublicProfile() {
     if (!currentUser) return <p className="p-4">Unable to load your profile.</p>;
     const isAlreadyFriend = currentUser.friends?.includes(profile._id);
     return (
-        <div className="max-w-xl mx-auto mt-8 bg-white p-6 rounded shadow">
-            <h2 className="text-2xl font-bold mb-4">{profile.username}</h2>
+        <div className="min-h-screen w-full bg-gradient-to-tr 
+  from-[#5896ed] via-45% via-[#dcd5e2] to-[#ff7ea7]
+  dark:from-[#0d006e] dark:via-25% dark:via-[#31258d] dark:to-[#531515]
+  bg-fixed
+  py-10">
+        <div className="max-w-xl mx-auto mt-8 bg-white/90 border-2 border-gray-600 dark:bg-gray-900  rounded-xl shadow-md shadow-black dark:shadow-white p-6  space-y-4">
+            <div className="flex flex-col items-center">
+               {profile.profilePic ? (
             <img
-                src={profile.profilePic || "/default-avatar.png"}
-                alt="Profile"
-                className="w-24 h-24 rounded-full mb-4"
+              src={profile.profilePic}
+              alt="Profile"
+              className="w-24 h-24 rounded-full border mb-3"
             />
-            <p><strong>Full Name:</strong> {profile.firstName} {profile.lastName}</p>
-            <p><strong>Email:</strong> {profile.email}</p>
-            <p><strong>Friends:</strong> {profile.friends.length || 0}</p>
-            <p><strong>Rating:</strong> {profile.rating || "N/A"}</p>
-            <p><strong>Problems Solved:</strong> {profile.problemsSolved.length || 0}</p>
-            <p><strong>Contests Given:</strong> {profile.contestsGiven.length || 0}</p>
+          ) : (
+            <div className="w-24 h-24 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center mb-3">
+              <span className="text-gray-500 dark:text-gray-300">No Picture</span>
+            </div>
+          )}
+                <h2 className="text-2xl font-bold dark:text-white">{profile.username}</h2>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 text-md dark:text-white">
+                <p><strong>Name:</strong> {profile.firstName} {profile.lastName}</p>
+                <p><strong>Rating:</strong> {profile.rating || "N/A"}</p>
+                <p><strong>Friends:</strong> {profile.friends.length || 0}</p>
+                <p><strong>Solved:</strong> {profile.problemsSolved.length || 0}</p>
+                <p><strong>Contests:</strong> {profile.contestsGiven.length || 0}</p>
+            </div>
 
             {profile._id !== currentUser._id && (
-                <>
+                <div className="flex gap-2 justify-center">
                     {!isAlreadyFriend ? (
                         <button
                             onClick={handleAddFriend}
-                            className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded"
+                            className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded transition"
                         >
                             ⭐ Add Friend
                         </button>
                     ) : (
                         <button
                             onClick={handleRemoveFriend}
-                            className="mt-4 bg-gray-300 text-black px-4 py-2 rounded"
+                            className="bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 text-black dark:text-white px-4 py-2 rounded transition"
                         >
                             ☆ Remove Friend
                         </button>
                     )}
-                </>
+                </div>
             )}
 
-            {message && <p className="mt-4 text-red-600 font-semibold">{message}</p>}
+            {message && <p className="mt-4 text-center text-red-600 font-medium">{message}</p>}
 
             {profile._id !== currentUser._id && isAlreadyFriend && (
-                <p className="mt-4 text-green-600 font-semibold">
+                <p className="mt-2 text-center text-green-600 font-medium">
                     ✅ Already your friend
                 </p>
             )}
         </div>
-    )
+</div>
+    );
 }

@@ -6,8 +6,7 @@ function SubmissionList() {
   const { id } = useParams();
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const token =localStorage.getItem("token");
-
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchSubmissions = async () => {
@@ -22,35 +21,59 @@ function SubmissionList() {
         console.error("Error fetching submissions:", err);
       }
       setLoading(false);
-    }
-    fetchSubmissions()
+    };
+    fetchSubmissions();
   }, [id]);
 
   if (loading) return <div className="p-4">Loading submissions...</div>;
-  if(!token) return (
-    <div>
-      <h2 className="text-xl dark:text-white">You must <Link to={"/login"} className="text-blue-700 hover:underline dark:text-blue-500 hover:text-blue-800">login </Link>to view submissions</h2>
-      
-    </div>
 
-  )
+  if (!token) return (
+    <div className="p-4 text-center">
+      <h2 className="text-xl dark:text-white">
+        You must{" "}
+        <Link
+          to="/login"
+          className="text-blue-700 hover:underline dark:text-blue-400"
+        >
+          login
+        </Link>{" "}
+        to view submissions.
+      </h2>
+    </div>
+  );
+
   return (
-    <div>
-      <h2 className="text-xl font-bold mb-4">My Submissions</h2>
-      
+    <div className="p-4">
+      <h2 className="text-2xl font-bold mb-4 dark:text-white">📝 My Submissions</h2>
+
       {submissions.length === 0 ? (
-        <p>No submissions yet.</p>
+        <p className="text-gray-600 dark:text-gray-300">No submissions yet.</p>
       ) : (
-        <ul className="space-y-2">
+        <ul className="grid gap-4">
           {submissions.map((s) => (
-            <li key={s._id} className="border p-2 rounded">
-              <p><strong>Verdict:</strong> {s.verdict}</p>
-              <p><strong>Language:</strong> {s.language}</p>
+            <li
+              key={s._id}
+              className="border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm hover:shadow-md transition"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span
+                  className={`inline-block text-xs font-semibold px-2 py-1 rounded ${
+                    s.verdict === "Accepted"
+                      ? "bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-200"
+                      : "bg-red-100 text-red-700 dark:bg-red-800 dark:text-red-200"
+                  }`}
+                >
+                  {s.verdict}
+                </span>
+                <span className="text-sm text-gray-500 dark:text-gray-400">
+                  {s.language.toUpperCase()}
+                </span>
+              </div>
               <Link
-                className="text-blue-600 underline"
                 to={`/problems/${id}/${s._id}`}
+                className="text-blue-600 dark:text-blue-400 hover:underline font-medium text-sm"
               >
-                View Details
+                🔍 View Submission Details
               </Link>
             </li>
           ))}

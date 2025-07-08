@@ -2,29 +2,31 @@ const fs = require('fs');
 const path = require('path');
 const { v4: uuid } = require('uuid');
 
-const dirCodes = path.join(__dirname, "../codes");
+const submissionsDir = path.join(__dirname, "../codes");
 
 const generateFile = (language, code) => {
-    if (!fs.existsSync(dirCodes)) {
-        fs.mkdirSync(dirCodes, { recursive: true });
-    }
-    const jobId = uuid();
-    let extension = "";
-    if (language === "cpp") extension = "cpp";
-    else if (language === "java") extension = "java";
-    else if (language === "python") extension = "py";
-    else if (language === "javascript") extension = "js";
+  // Ensure /codes exists
+  if (!fs.existsSync(submissionsDir)) {
+    fs.mkdirSync(submissionsDir, { recursive: true });
+  }
 
-    let fileName = "";
-    if (language === "java") {
-        fileName = `Main.java`;
-    } else {
-        const jobId = uuid();
-        fileName = `${jobId}.${language}`;
-    }
-    const filePath = path.join(dirCodes, fileName);
-    fs.writeFileSync(filePath, code);
-    return filePath;
+  // Create a unique folder for this submission
+  const jobId = uuid();
+  const jobDir = path.join(submissionsDir, jobId);
+  fs.mkdirSync(jobDir);
+
+  // Determine filename
+  let fileName;
+  if (language === "cpp") fileName = "main.cpp";
+  else if (language === "java") fileName = "Main.java";
+  else if (language === "python") fileName = "main.py";
+  else if (language === "javascript") fileName = "main.js";
+  else throw new Error("Unsupported language");
+
+  const filePath = path.join(jobDir, fileName);
+  fs.writeFileSync(filePath, code);
+
+  return { filePath, jobId, jobDir };
 };
 
 module.exports = generateFile;

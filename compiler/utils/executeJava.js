@@ -2,44 +2,32 @@ const fs = require("fs");
 const path = require("path");
 const { exec } = require("child_process");
 
-const outputDir = path.join(__dirname, "../outputs");
-
 const executeJava = async (filePath, input = "") => {
-    if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir, { recursive: true });
-    }
-    const jobId = path.basename(filePath).split(".")[0];
-    const dir = path.dirname(filePath);
-    const inputPath = path.join(outputDir, `${jobId}.txt`);
-    fs.writeFileSync(inputPath, input);
+  const dir = path.dirname(filePath);
+  const inputPath = path.join(dir, "input.txt");
 
-    const className = path.basename(filePath).replace(".java", "");
+  fs.writeFileSync(inputPath, input);
 
-    return new Promise((resolve, reject) => {
-        // Compile first
-        exec(`javac ${filePath}`, (compileError, _, compileStderr) => {
-            if (compileError) {
-                return reject({ type: "CompileError", message: compileStderr });
+  return new Promise((resolve, reject) => {
+    // Compile
+    exec(`javac Main.java`, { cwd: dir }, (compileError, _, compileStderr) => {
+      if (compileError) {
+        return reject({ type: "CompileError", message: compileStderr });
+      }
+      // Run
+      exec(`java Main < input.txt`, { cwd: dir, timeout: 3000 },
+        (runError, stdout, stderr) => {
+          if (runError) {
+            if (runError.killed) {
+              return reject({ type: "TLE", message: "Time Limit Exceeded" });
             }
-            // Run
-            exec(
-                `java -cp ${dir} ${className} < ${inputPath}`,
-                { timeout: 3000 },
-                (runError, runStdout, runStderr) => {
-                    if (runError) {
-                        if (runError.killed) {
-                            return reject({ type: "TLE", message: "Time Limit Exceeded" });
-                        }
-                        return reject({
-                            type: "RuntimeError",
-                            message: runStderr || runError.message,
-                        });
-                    }
-                    resolve(runStdout);
-                }
-            );
-        });
+            return reject({ type: "RuntimeError", message: stderr || runError.message });
+          }
+          resolve(stdout);
+        }
+      );
     });
+  });
 };
 
 module.exports = executeJava;

@@ -10,20 +10,54 @@ import Submissions from "./SubmissionList";
 import { Navigate } from "react-router-dom";
 import './split.css';
 import SubmissionDetails from "./SubmissionDetails";
+import ReactMarkdown from "react-markdown";
+import Modal from "../components/Modal";
+
+const boilerplate = {
+  "cpp": `#include <iostream>
+using namespace std;
+
+int main() {
+    // Write your code here
+    return 0;
+}`,
+  "python": `# Write your code here
+def main():
+    pass
+
+if __name__ == "__main__":
+    main()`,
+  "java": `public class Main {
+    public static void main(String[] args) {
+        // Write your code here
+    }
+}`,
+  "javascript": `// Write your code here
+function main() {
+
+}
+
+main();`
+};
 function ProblemPage() {
-  const { id ,submissionId} = useParams();
+  const { id, submissionId } = useParams();
   const [problem, setProblem] = useState(null);
-  const [code, setCode] = useState("// Write your code here");
   const [language, setLanguage] = useState("cpp");
+  const [code, setCode] = useState(boilerplate["cpp"]);
   const [output, setOutput] = useState("");
   const [input, setInput] = useState("");
   const [theme, setTheme] = useState("light");
-  const navigate= useNavigate();
+  const [loadingAI, setLoadingAI] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState("");
+  const [lastFeedbackCode, setLastFeedbackCode] = useState("");
+
+  const navigate = useNavigate();
 
   const location = useLocation();
   const isSolutions = location.pathname.includes("solutions");
   const isSubmissions = location.pathname.includes("submissions");
-  const isDetail=Boolean(submissionId);
+  const isDetail = Boolean(submissionId);
 
   useEffect(() => {
     axios
@@ -31,6 +65,12 @@ function ProblemPage() {
       .then((res) => setProblem(res.data.problem))
       .catch((err) => console.error(err));
   }, [id]);
+
+  const handleLanguageChange = (e) => {
+    const selectedLang = e.target.value;
+    setLanguage(selectedLang);
+    setCode(boilerplate[selectedLang]);
+  };
 
   const handleRun = async () => {
     const token = localStorage.getItem("token");
@@ -101,6 +141,36 @@ function ProblemPage() {
       );
     }
   };
+
+  const handleCodeFeedback = async () => {
+    if (code === lastFeedbackCode && modalContent) {
+      setIsModalOpen(true);
+      return;
+    }
+    setLoadingAI(true);
+    setModalContent("");
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/ai/feedback",
+        { code },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setModalContent(res.data.feedback);
+      setLastFeedbackCode(code);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error("Error fetching feedback:", error);
+      setModalContent("Failed to get feedback");
+      setIsModalOpen(true);
+    } finally {
+      setLoadingAI(false);
+    }
+  };
+
   const handleThemeChange = () => {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
   };
@@ -120,25 +190,25 @@ function ProblemPage() {
         gutterSize={7}
       >
         {/* Left Pane */}
-        <div className="p-6 h-screen overflow-y-scroll bg-white dark:bg-white/25 border dark:border-gray-700 rounded-2xl shadow-inner">
+        <div className="p-6 h-screen overflow-y-scroll bg-white dark:bg-white/15 border dark:border-gray-700 rounded-2xl shadow-inner">
           {isSolutions ? (
             <Solutions />
           ) : isSubmissions ? (
             <Submissions />
-          ) : isDetail ?(
-            <SubmissionDetails/>
-          ):
-          (
-            <Description problem={problem} />
-          )}
+          ) : isDetail ? (
+            <SubmissionDetails />
+          ) :
+            (
+              <Description problem={problem} />
+            )}
         </div>
 
         {/* Right Pane */}
-        <div className="flex flex-col gap-3 h-screen p-6  bg-white dark:bg-white/25 border dark:border-gray-700 rounded-2xl shadow-inner">
+        <div className="flex flex-col gap-3 h-screen p-6  bg-white dark:bg-white/15 border dark:border-gray-700 rounded-2xl shadow-inner">
           <div className="flex items-center justify-between mb-2">
             <select
               value={language}
-              onChange={(e) => setLanguage(e.target.value)}
+              onChange={handleLanguageChange}
               className="border p-2 rounded w-1/3 text-sm dark:bg-gray-800 dark:text-white"
             >
               <option value="java">Java</option>
@@ -178,7 +248,31 @@ function ProblemPage() {
             >
               ✅ Submit Code
             </button>
+
+            <button
+              onClick={handleCodeFeedback}
+              className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 rounded shadow transition"
+            >
+              💡 Get Code Feedback
+            </button>
+
+            <button
+              onClick={() => alert("Get Hint not implemented yet")}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded shadow transition"
+            >
+              🧠 Get Hint
+            </button>
+
           </div>
+          {loadingAI && (
+            <p className="text-sm text-gray-500 mt-2">⏳ Thinking...</p>
+          )}
+          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            <h2 className="text-lg font-semibold mb-2">💡 AI Feedback</h2>
+            <div className="whitespace-pre-wrap text-sm">
+              <ReactMarkdown>{modalContent}</ReactMarkdown>
+            </div>
+          </Modal>
 
           <textarea
             placeholder="Output..."

@@ -1,6 +1,21 @@
 import { HiClipboardCopy } from "react-icons/hi"
-
+import { useState } from "react";
 function Description({ problem }) {
+
+  const [copied, setCopied] = useState({});
+
+  const handleCopy = async (key, value) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied((prev) => ({ ...prev, [key]: true }));
+      setTimeout(() => {
+        setCopied((prev) => ({ ...prev, [key]: false }));
+      }, 1000); // 1 second
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
+
   return (
     <div className="
     h-full
@@ -32,33 +47,63 @@ function Description({ problem }) {
           </div>
         )}
       </div>
-      <p className="whitespace-pre-wrap text-lg mb-4 text-gray-800 dark:text-white">{problem.statement}</p>
+      <p className="whitespace-pre-wrap text-xl mb-4 text-gray-800 dark:text-gray-400">{problem.statement}</p>
 
-      {problem.testCases?.filter(tc => !tc.hidden).length > 0 && (
+      {problem.testCases?.filter((tc) => !tc.hidden).length > 0 && (
         <div>
-          <h4 className="text-lg dark:text-white font-semibold mb-2">Sample Test Cases:</h4>
+          <h4 className="text-lg dark:text-white font-semibold mb-2">
+            Sample Test Cases:
+          </h4>
           {problem.testCases
-            .filter(tc => !tc.hidden)
+            .filter((tc) => !tc.hidden)
             .map((tc, idx) => (
               <div
                 key={idx}
                 className="border border-gray-300 dark:border-gray-700 rounded mb-3 p-3 bg-gray-100 dark:bg-gray-800"
               >
-                <div className="flex justify-between py-2" >
+                {/* Input */}
+                <div className="flex justify-between py-2">
                   <p className="text-md dark:text-white font-semibold">Input:</p>
-                  <p className="dark:text-gray-300 cursor-pointer font-light"> Copy </p>
-                </div >
-                <pre className="bg-gray-300 dark:text-white dark:bg-[#323240] p-2 rounded text-md overflow-x-auto">{tc.input}</pre>
-                <p className="text-md dark:text-white py-2 font-semibold mt-2">Expected Output:</p>
-                <pre className="bg-gray-300 dark:text-white dark:bg-[#323240] p-2 rounded text-md overflow-x-auto">{tc.output}</pre>
-                {
-                  tc.explanation && (
-                    <>
-                      <p className="text-md dark:text-white py-2 font-semibold mt-2">Explanation:</p>
-                      <pre className="bg-gray-300 dark:text-white dark:bg-[#323240] p-2 rounded text-md overflow-x-auto">{tc.explanation}</pre>
-                    </>
-                  )
-                }
+                  <button
+                    onClick={() => handleCopy(`input-${idx}`, tc.input)}
+                    className="flex items-center gap-1 text-sm dark:text-gray-300 hover:underline"
+                  >
+                    <HiClipboardCopy />
+                    {copied[`input-${idx}`] ? "Copied!" : "Copy"}
+                  </button>
+                </div>
+                <pre className="bg-gray-300 dark:text-gray-400 dark:bg-[#27272f] p-2 rounded text-md overflow-x-auto">
+                  {tc.input}
+                </pre>
+
+                {/* Output */}
+                <div className="flex justify-between py-2">
+                  <p className="text-md dark:text-white font-semibold">
+                    Expected Output:
+                  </p>
+                  <button
+                    onClick={() => handleCopy(`output-${idx}`, tc.output)}
+                    className="flex items-center gap-1 text-sm dark:text-gray-300 hover:underline"
+                  >
+                    <HiClipboardCopy />
+                    {copied[`output-${idx}`] ? "Copied!" : "Copy"}
+                  </button>
+                </div>
+                <pre className="bg-gray-300 dark:text-gray-400 dark:bg-[#27272f] p-2 rounded text-md overflow-x-auto">
+                  {tc.output}
+                </pre>
+
+                {/* Explanation */}
+                {tc.explanation && (
+                  <>
+                    <p className="text-md dark:text-white py-2 font-semibold mt-2">
+                      Explanation:
+                    </p>
+                    <pre className="bg-gray-300 dark:text-white dark:bg-[#323240] p-2 rounded text-md overflow-x-auto">
+                      {tc.explanation}
+                    </pre>
+                  </>
+                )}
               </div>
             ))}
         </div>

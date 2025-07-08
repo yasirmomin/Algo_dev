@@ -35,8 +35,8 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-white via-indigo-50 to-blue-50 dark:from-gray-900 dark:to-black">
-      <div className="bg-white/80 dark:bg-white/5 backdrop-blur-md border border-gray-200 dark:border-gray-700 shadow-xl rounded-xl p-8 w-full max-w-lg">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-[rgb(254,167,226)] via-25% via-[#ffb4b4] to-blue-300 dark:from-[#0d006e] dark:via-25% dark:via-[#31258d] dark:to-[#531515]">
+      <div className="bg-white/80 dark:bg-gray-900 backdrop-blur-md border border-gray-200 dark:border-gray-700 shadow-xl rounded-xl p-8 w-full max-w-lg">
         <h2 className="text-3xl font-extrabold mb-6 text-center text-indigo-600 dark:text-white">
           Create Account
         </h2>
@@ -92,7 +92,7 @@ function Register() {
           )}
         </form>
 
-        <p className="mt-4 text-center text-gray-600 dark:text-white-500">
+        <p className="mt-4 text-center text-gray-500 dark:text-white-500">
           Already registered?{" "}
           <Link to="/login" className="text-indigo-500 hover:underline">
             Login

@@ -1,6 +1,8 @@
 import { Editor } from "@monaco-editor/react";
 
-function CodeEditor({ code, setCode, language , theme }) {
+
+function CodeEditor({ code, setCode, language, theme }) {
+
   return (
     <div className="rounded-xl shadow-md border border-gray-300 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-900">
       <Editor
@@ -9,7 +11,7 @@ function CodeEditor({ code, setCode, language , theme }) {
         language={language}
         value={code}
         onChange={(value) => setCode(value)}
-        theme={theme === "dark" ? "vs-dark" : "vs-light"} 
+        theme={theme === "dark" ? "vs-dark" : "vs-light"}
         options={{
           fontSize: 18,
           fontFamily: "Fira Code, monospace",

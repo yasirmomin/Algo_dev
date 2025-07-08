@@ -95,9 +95,9 @@ function Problems() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br 
+    <div className="min-h-screen w-full bg-gradient-to-tr 
   from-[#5896ed] via-45% via-[#dcd5e2] to-[#ff7ea7]
-  dark:from-[rgba(187,5,111,0.88)] dark:via-45%  dark:via-[#111012]  dark:to-[#0231b1df]
+  dark:from-[#0d006e] dark:via-25% dark:via-[#31258d] dark:to-[#531515]
   bg-fixed
   py-10">
 
@@ -117,7 +117,7 @@ function Problems() {
             </button>
           )}
         </div>
-        <div className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl p-4 shadow-md">
+        <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl p-4 shadow-md">
           <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-3">
             🔍 Filter Problems
           </h2>

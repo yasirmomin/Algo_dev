@@ -52,14 +52,14 @@ const UserSearch = ({ onAddFriend, onRemoveFriend, currentUser }) => {
   }, [query]);
 
   return (
-    <div className="relative mt-6 max-w-md mx-auto">
-      <div className="flex gap-2 mb-2">
+    <div className="relative mt-6 max-w-md mx-auto rounded-2xl">
+      <div className="flex gap-2 mb-2 bg-amber-100 ">
         <input
           type="text"
           placeholder="Search by username..."
           value={query}
           onChange={handleInputChange}
-          className="border p-2 flex-grow rounded"
+          className="border p-2 flex-grow rounded "
         />
       </div>
 
@@ -73,11 +73,6 @@ const UserSearch = ({ onAddFriend, onRemoveFriend, currentUser }) => {
                 className="flex items-center justify-between px-3 py-2 hover:bg-gray-100 border-b last:border-b-0"
               >
                 <div className="flex items-center gap-2">
-                  <img
-                    src={user.profilePic || "/default-avatar.png"}
-                    alt="Profile"
-                    className="w-6 h-6 rounded-full"
-                  />
                   <span
                     onClick={() => navigate(`/profile/${user._id}`)}
                     className="cursor-pointer text-blue-600 hover:underline"
@@ -110,7 +105,7 @@ const UserSearch = ({ onAddFriend, onRemoveFriend, currentUser }) => {
         </div>
       )}
 
-      {loading && <p className="text-sm mt-1">Loading...</p>}
+      {loading && <p className="text-sm mt-1 dark:text-white">Loading...</p>}
     </div>
   );
 };

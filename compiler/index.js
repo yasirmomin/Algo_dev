@@ -12,9 +12,6 @@ app.use(cors({ credentials: true, }));
 const isAuthenticated = require('./middlewares/isAuthenticated');
 const dotenv = require('dotenv');
 dotenv.config();
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
 
 app.post('/run', isAuthenticated, async (req, res) => {
     const { language = "cpp", code, input="" } = req.body;
@@ -25,7 +22,7 @@ app.post('/run', isAuthenticated, async (req, res) => {
         });
     }
     try {
-        const filePath = generateFile(language, code);
+        const {filePath} = generateFile(language, code);
 
         let output = "";
 
