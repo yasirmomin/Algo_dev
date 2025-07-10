@@ -15,6 +15,8 @@ import Solutions from './pages/Solutions';
 import Description from './components/Description';
 import SubmissionList from './pages/SubmissionList';
 import SubmissionDetails from './pages/SubmissionDetails';
+import EditProfile from './pages/EditProfile';
+import MySubmissions from './pages/MySubmissions';
 
 
 function App() {
@@ -43,11 +45,12 @@ function App() {
         <Route path="/problems/:id" element={<ProblemPage />}>
           <Route index element={<Description />} />
           <Route path="solutions" element={<Solutions />} />
-          <Route path="submissions" element={<SubmissionList />} />
-          <Route path=":submissionId" element={<SubmissionDetails />} />
+          <Route path="submissions" element={<ProtectedRoutes><SubmissionList /></ProtectedRoutes>} />
+          <Route path=":submissionId" element={<ProtectedRoutes><SubmissionDetails /></ProtectedRoutes>} />
         </Route>
 
-
+        <Route path="/edit-profile" element={<ProtectedRoutes><EditProfile /></ProtectedRoutes>} />
+        <Route path="/my-submissions" element={<MySubmissions />} />
       </Routes>
     </Router>
 

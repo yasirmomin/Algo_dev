@@ -4,9 +4,9 @@ const { loginCode, registerCode } = require('../controllers/authController');
 const isAuthenticated = require('../middlewares/isAuthenticated');
 const { getAllProblems, addProblem, updateProblem, deleteProblem, getProblemById } = require('../controllers/problemController');
 const isAdmin = require('../middlewares/isAdmin');
-const { searchUsers, addFriend, getMyProfile, getUserById, getFriends, removeFriend } = require('../controllers/userController');
-const { submitCode, getSubmissionsForProblem, getSubmissionById} = require('../controllers/submissionController');
-const { getCodeFeedback } = require('../controllers/aiController');
+const { searchUsers, addFriend, getMyProfile, getUserById, getFriends, removeFriend, updateMyProfile } = require('../controllers/userController');
+const { submitCode, getSubmissionsForProblem, getSubmissionById, getAllMySubmissions } = require('../controllers/submissionController');
+const { getCodeFeedback, getCodeHint, getTimeComplexity } = require('../controllers/aiController');
 
 router.post('/login', loginCode);
 
@@ -33,6 +33,8 @@ router.post('/user/add-friend/:id', isAuthenticated, addFriend);
 
 router.get("/user/me", isAuthenticated, getMyProfile);
 
+router.put("/user/me", isAuthenticated, updateMyProfile);
+
 router.get("/user/friends", isAuthenticated, getFriends);
 
 router.get("/user/:id", isAuthenticated, getUserById);
@@ -46,7 +48,13 @@ router.get("/problems/:id/submissions", isAuthenticated, getSubmissionsForProble
 
 router.get("/problems/:id/:submissionId", isAuthenticated, getSubmissionById);
 
+router.get("/my-submissions", isAuthenticated, getAllMySubmissions);
 
-router.post("/ai/feedback",isAuthenticated,getCodeFeedback);
+
+router.post("/ai/feedback", isAuthenticated, getCodeFeedback);
+
+router.post("/ai/hint", isAuthenticated, getCodeHint);
+
+router.post("/ai/complexity", isAuthenticated, getTimeComplexity);
 
 module.exports = router;

@@ -32,7 +32,7 @@ function Login() {
     <div className="min-h-screen grid ">
       
       <div className="flex items-center justify-center bg-gradient-to-bl from-[rgb(254,167,226)]  via-[#ffb4b4] to-blue-300 dark:from-[#0d006e] dark:via-25% dark:via-[#31258d] dark:to-[#531515] px-6">
-        <div className="w-full max-w-md space-y-6 bg-white/80 dark:bg-gray-900 backdrop-blur-md p-8 rounded-xl border border-gray-200 dark:border-gray-700">
+        <div className="w-full max-w-md space-y-6 bg-white/80 dark:bg-gray-900 backdrop-blur-md p-8 rounded-xl border-4 shadow border-gray-200 dark:border-gray-700">
           <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white">Login</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             {message && (

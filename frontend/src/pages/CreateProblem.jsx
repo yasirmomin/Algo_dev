@@ -24,9 +24,10 @@ function CreateProblem() {
     title: '',
     statement: '',
     difficulty: '',
-    tags: '',
+    tags: [],
     testCases: [{ input: '', output: '', explanation: '', hidden: false }],
-    constraints: ['']
+    constraints: [''],
+    solutions: ''
   });
   const [message, setMessage] = useState('');
   const [tags, setTags] = useState([]);
@@ -80,7 +81,7 @@ function CreateProblem() {
     setMessage('');
 
     const validTestCases = formData.testCases.filter(
-      tc => tc.input.trim() !== '' || tc.output.trim() !== ''
+      tc => tc.input.trim() !== '' || tc.output.trim() !== '' || tc.explanation.trim() !== ''
     );
 
     if (validTestCases.length === 0) {
@@ -98,7 +99,7 @@ function CreateProblem() {
           statement: formData.statement.trim(),
           tags,
           testCases: validTestCases,
-          constraints: formData.constraints.filter(c => c.trim() !== '')
+          constraints: formData.constraints.filter(c => c.trim() !== ''),
         },
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -302,6 +303,15 @@ function CreateProblem() {
               ))}
             </div>
 
+            <label className="block mb-2 dark:text-gray-200 font-medium">Solution (Markdown supported):</label>
+            <textarea
+              name="solutions"
+              placeholder="Write detailed explanation and code solution using Markdown..."
+              value={formData.solutions}
+              onChange={handleChange}
+              rows="6"
+              className="w-full border px-3 py-2 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            />
 
 
             <button

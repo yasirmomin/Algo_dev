@@ -31,7 +31,7 @@ const getAllProblems = async (req, res) => {
 
 const addProblem = async (req, res) => {
     try {
-        const { title, statement, difficulty, tags, testCases, constraints } = req.body;
+        const { title, statement, difficulty, tags, testCases, constraints, solutions } = req.body;
 
         if (!title || !statement || !difficulty) {
             return res.status(400).json({ message: "Please fill all required fields" });
@@ -43,7 +43,8 @@ const addProblem = async (req, res) => {
             difficulty,
             tags: tags || [],
             testCases,
-            constraints: req.body.constraints || []
+            constraints: req.body.constraints || [],
+            solutions: req.body.solutions ||''
         });
 
         await newProblem.save();
@@ -63,7 +64,7 @@ const addProblem = async (req, res) => {
 const updateProblem = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, statement, difficulty, tags, testCases, constraints } = req.body;
+        const { title, statement, difficulty, tags, testCases, constraints ,solutions} = req.body;
         if (!title || !statement || !difficulty) {
             return res.status(400).json({ message: "Please fill all required fields" });
         }
@@ -73,7 +74,8 @@ const updateProblem = async (req, res) => {
             difficulty,
             tags: tags || [],
             testCases,
-            constraints: req.body.constraints || []
+            constraints: req.body.constraints || [],
+            solutions:req.body.solutions || ""
         }, { new: true });
 
         if (!updatedProblem) {

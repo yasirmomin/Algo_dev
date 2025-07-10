@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HiPlus } from "react-icons/hi";
+import Swal from "sweetalert2";
 
 const TAG_OPTIONS = [
   "Array",
@@ -54,7 +55,12 @@ function Problems() {
       });
       fetchProblems();
     } catch (err) {
-      alert("❌ Error deleting problem");
+      Swal.fire({
+              title: 'Error!',
+              text: "Error deleting problem",
+              icon: 'error',
+              confirmButtonText: 'OK'
+            })
       console.error(err);
     }
   };

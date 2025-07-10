@@ -6,15 +6,16 @@ import axios from "axios";
 import HeaderNavigation from "../components/HeaderNavigation";
 import Description from "../components/Description";
 import Solutions from "./Solutions";
-import Submissions from "./SubmissionList";
+import SubmissionList from "./SubmissionList";
 import { Navigate } from "react-router-dom";
 import './split.css';
 import SubmissionDetails from "./SubmissionDetails";
 import ReactMarkdown from "react-markdown";
 import Modal from "../components/Modal";
+import Swal from "sweetalert2";
 
 const boilerplate = {
-  "cpp": `#include <iostream>
+  "cpp": `#include <bits/stdc++.h>
 using namespace std;
 
 int main() {
@@ -51,6 +52,8 @@ function ProblemPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [lastFeedbackCode, setLastFeedbackCode] = useState("");
+  const [refreshSignal, setRefreshSignal] = useState(0);
+  const [hintLoading, setHintLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -72,12 +75,24 @@ function ProblemPage() {
     setCode(boilerplate[selectedLang]);
   };
 
-  const handleRun = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("You must be logged in to run code.");
-      return;
+  useEffect(() => {
+    const saved = localStorage.getItem(`code-${id}-${language}`);
+    if (saved) {
+      setCode(saved);
+    } else {
+      setCode(boilerplate[language]);
     }
+  }, [id, language]);
+
+  useEffect(() => {
+    if (code) {
+      localStorage.setItem(`code-${id}-${language}`, code);
+    }
+  }, [code, id, language]);
+
+
+
+  const handleRun = async () => {
     try {
       const res = await axios.post(
         "http://localhost:8000/run",
@@ -96,7 +111,12 @@ function ProblemPage() {
       setOutput(res.data.output);
     } catch (error) {
       if (error.response?.status === 403) {
-        alert("You must be logged in to run code.");
+        Swal.fire({
+          title: 'Error!',
+          text: 'You need to login to run the code',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        })
         return;
       }
       setOutput(
@@ -108,10 +128,6 @@ function ProblemPage() {
   };
   const handleSubmit = async () => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      alert("You must be logged in to submit code.");
-      return;
-    }
     try {
       const res = await axios.post(
         "http://localhost:3000/submit",
@@ -128,10 +144,16 @@ function ProblemPage() {
       );
       setOutput(`Verdict: ${res.data.verdict}`);
       navigate(`/problems/${id}/submissions`);
+      setRefreshSignal(Date.now());
     } catch (error) {
       console.error("Error submitting code:", error);
       if (error.response?.status === 403) {
-        alert("You must be logged in to run code.");
+        Swal.fire({
+          title: 'Error!',
+          text: 'You need to login to submit the code',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        })
         return;
       }
       setOutput(
@@ -152,7 +174,10 @@ function ProblemPage() {
     try {
       const res = await axios.post(
         "http://localhost:3000/ai/feedback",
-        { code },
+        {
+          code,
+          problemName: problem.title,
+        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -160,8 +185,10 @@ function ProblemPage() {
         }
       );
       setModalContent(res.data.feedback);
+      console.log(res.data.feedback);
       setLastFeedbackCode(code);
       setIsModalOpen(true);
+      
     } catch (error) {
       console.error("Error fetching feedback:", error);
       setModalContent("Failed to get feedback");
@@ -170,6 +197,43 @@ function ProblemPage() {
       setLoadingAI(false);
     }
   };
+
+
+  const handleGetHint = async () => {
+    if (hintLoading || !problem) return;
+    if (code === lastFeedbackCode && modalContent) {
+      setIsModalOpen(true);
+      return;
+    }
+    setHintLoading(true);
+    setModalContent("");
+    try {
+      const res = await axios.post(
+
+        "http://localhost:3000/ai/hint",
+        {
+          code,
+          problemName: problem.title,
+          problemDescription: problem.description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setModalContent(res.data.hints);
+      setLastFeedbackCode(code);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error("Error fetching hint:", error);
+      setModalContent("⚠️ Failed to get hint. Try again later.");
+      setIsModalOpen(true);
+    } finally {
+      setHintLoading(false);
+    }
+  };
+
 
   const handleThemeChange = () => {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
@@ -192,9 +256,9 @@ function ProblemPage() {
         {/* Left Pane */}
         <div className="p-6 h-screen overflow-y-scroll bg-white dark:bg-white/15 border dark:border-gray-700 rounded-2xl shadow-inner">
           {isSolutions ? (
-            <Solutions />
+            <Solutions solutions={problem.solutions} />
           ) : isSubmissions ? (
-            <Submissions />
+            <SubmissionList refreshSignal={refreshSignal} />
           ) : isDetail ? (
             <SubmissionDetails />
           ) :
@@ -215,11 +279,23 @@ function ProblemPage() {
               <option value="cpp">C++</option>
               <option value="python">Python</option>
               <option value="javascript">JavaScript</option>
+
+
             </select>
+            <button
+              onClick={() => {
+                localStorage.removeItem(`code-${id}-${language}`);
+                setCode(boilerplate[language]);
+              }}
+              className=" hover:bg-gray-200 text-black dark:text-gray-200 border-1 rounded-lg dark:hover:bg-gray-600 cursor-pointer font-semibold px-4 py-1 shadow transition "
+            >
+              🔄 Reset Code
+            </button>
+
             {(theme === "dark") ? (
-              <button className=" border py-1 px-3 rounded-xl dark:text-gray-300 cursor-pointer font-semibold  hover:bg-gray-500 transition-colors delay-300 " onClick={handleThemeChange}>🌙 Dark</button>
+              <button className=" border py-1 px-3 rounded-xl dark:text-gray-300 cursor-pointer font-semibold  dark:hover:bg-gray-500 hover:bg-gray-200 transition  " onClick={handleThemeChange}>🌙 Dark</button>
             ) : (
-              <button className=" border p-1 px-3 rounded-xl cursor-pointer dark:text-gray-300 font-semibold hover:bg-gray-500" onClick={handleThemeChange}>
+              <button className=" border p-1 px-3 rounded-xl cursor-pointer dark:text-gray-300 font-semibold dark:hover:bg-gray-500 hover:bg-gray-200 transition" onClick={handleThemeChange}>
                 ☀️ Light
               </button>
             )}
@@ -251,25 +327,27 @@ function ProblemPage() {
 
             <button
               onClick={handleCodeFeedback}
-              className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 rounded shadow transition"
+              disabled={loadingAI}
+              className={`${loadingAI ? "bg-gray-400" : "bg-indigo-600 hover:bg-indigo-700"
+                } text-white font-semibold px-4 py-2 rounded shadow transition`}
             >
-              💡 Get Code Feedback
+              {loadingAI ? "🧠 Thinking..." : "💡 Get Code Feedback"}
             </button>
 
             <button
-              onClick={() => alert("Get Hint not implemented yet")}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded shadow transition"
+              onClick={handleGetHint}
+              disabled={hintLoading}
+              className={`${hintLoading ? "bg-gray-400" : "bg-amber-400 hover:bg-amber-500"
+                } text-white font-semibold px-4 py-2 rounded shadow transition`}
             >
-              🧠 Get Hint
+              {hintLoading ? "🧠 Thinking..." : "🧠 Get Hint"}
             </button>
 
+
           </div>
-          {loadingAI && (
-            <p className="text-sm text-gray-500 mt-2">⏳ Thinking...</p>
-          )}
           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
             <h2 className="text-lg font-semibold mb-2">💡 AI Feedback</h2>
-            <div className="whitespace-pre-wrap text-sm">
+            <div className="whitespace-pre-wrap ">
               <ReactMarkdown>{modalContent}</ReactMarkdown>
             </div>
           </Modal>

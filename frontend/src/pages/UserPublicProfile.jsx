@@ -112,7 +112,7 @@ export default function UserPublicProfile() {
                 <p><strong>Name:</strong> {profile.firstName} {profile.lastName}</p>
                 <p><strong>Rating:</strong> {profile.rating || "N/A"}</p>
                 <p><strong>Friends:</strong> {profile.friends.length || 0}</p>
-                <p><strong>Solved:</strong> {profile.problemsSolved.length || 0}</p>
+                <p><strong>Problems Solved:</strong> {profile.problemsSolved.length || 0}</p>
                 <p><strong>Contests:</strong> {profile.contestsGiven.length || 0}</p>
             </div>
 

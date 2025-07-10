@@ -58,7 +58,31 @@ const getMyProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select(
       "_id firstName lastName email username profilePic rating friends contestsGiven problemsSolved createdAt phone isAdmin"
-    );
+    ).populate("problemsSolved", "_id title difficulty");
+
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const updateMyProfile = async (req, res) => {
+  try {
+    const updates = {};
+    const allowedFields = ["firstName", "lastName", "profilePic"];
+
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        updates[field] = req.body[field];
+      }
+    });
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { $set: updates },
+      { new: true, runValidators: true }
+    ).select("_id firstName lastName email username profilePic rating friends contestsGiven problemsSolved createdAt");
 
     res.status(200).json({ success: true, user });
   } catch (error) {
@@ -71,7 +95,7 @@ const getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select(
       "_id username firstName lastName email profilePic rating friends contestsGiven problemsSolved"
-    );
+    ).populate("problemsSolved", "_id title difficulty");
     if (!user) return res.status(404).json({ message: "User not found" });
     res.status(200).json({ user });
   } catch (err) {
@@ -124,4 +148,4 @@ const removeFriend = async (req, res) => {
 };
 
 
-module.exports = { searchUsers , addFriend ,getMyProfile, getUserById , getFriends, removeFriend };
+module.exports = { searchUsers , addFriend ,getMyProfile, updateMyProfile, getUserById , getFriends, removeFriend };

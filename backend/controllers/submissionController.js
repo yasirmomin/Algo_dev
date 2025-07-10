@@ -74,6 +74,14 @@ const submitCode = async (req, res) => {
         });
 
         await submission.save();
+        if (verdict === "Accepted") {
+            const user = await require("../models/User").findById(req.user.id);
+            if (!user.problemsSolved.includes(problemId)) {
+                user.problemsSolved.push(problemId);
+                await user.save();
+            }
+        }
+
 
         return res.json({
             success: true,
@@ -87,32 +95,43 @@ const submitCode = async (req, res) => {
 };
 
 const getSubmissionById = async (req, res) => {
-  try {
-    const submission = await Submission.findById(req.params.submissionId).populate("problem");
-    if (!submission) {
-      return res.status(404).json({ message: "Submission not found." });
+    try {
+        const submission = await Submission.findById(req.params.submissionId).populate("problem");
+        if (!submission) {
+            return res.status(404).json({ message: "Submission not found." });
+        }
+        res.json({ submission });
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error." });
     }
-    res.json({ submission });
-  } catch (err) {
-    res.status(500).json({ message: "Internal server error." });
-  }
 };
 
 
 const getSubmissionsForProblem = async (req, res) => {
+    try {
+        const submissions = await Submission.find({
+            problem: req.params.id,
+            user: req.user.id
+        }).sort({ createdAt: -1 });
+
+        res.json({ submissions });
+    } catch (err) {
+        console.error("Error fetching submissions:", err);
+        res.status(500).json({ message: "Internal server error." });
+    }
+};
+
+const getAllMySubmissions = async (req, res) => {
   try {
-    const submissions = await Submission.find({
-      problem: req.params.id,
-      user: req.user.id
-    }).sort({ createdAt: -1 });
+    const submissions = await Submission.find({ user: req.user.id })
+      .populate("problem", "title") // get problem title
+      .sort({ createdAt: -1 });
 
     res.json({ submissions });
   } catch (err) {
-    console.error("Error fetching submissions:", err);
-    res.status(500).json({ message: "Internal server error." });
+    console.error("Error fetching my submissions:", err);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
-
-
-module.exports = { submitCode, getSubmissionById , getSubmissionsForProblem  };
+module.exports = { submitCode, getSubmissionById, getSubmissionsForProblem ,getAllMySubmissions };

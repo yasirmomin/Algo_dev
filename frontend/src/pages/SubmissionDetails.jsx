@@ -1,13 +1,17 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Modal from "../components/Modal";
 
 function SubmissionDetails() {
   const { id, submissionId } = useParams();
   const [loading, setLoading] = useState(true);
   const [submission, setSubmission] = useState(null);
+
   const [complexity, setComplexity] = useState("");
   const [loadingComplexity, setLoadingComplexity] = useState(false);
+  const [complexityModalOpen, setComplexityModalOpen] = useState(false);
+  const [complexityFetched, setComplexityFetched] = useState(false);
 
   useEffect(() => {
     const fetchSubmissionDetails = async () => {
@@ -28,11 +32,12 @@ function SubmissionDetails() {
 
   const handleGetComplexity = async () => {
     setLoadingComplexity(true);
+    setComplexityModalOpen(true);
     setComplexity("Analyzing time complexity...");
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/ai/time-complexity",
+        "http://localhost:3000/ai/complexity",
         { code: submission.code },
         {
           headers: {
@@ -41,9 +46,10 @@ function SubmissionDetails() {
         }
       );
       setComplexity(res.data.complexity);
+      setComplexityFetched(true);
     } catch (error) {
       console.error("Error fetching time complexity:", error);
-      setComplexity("Failed to analyze time complexity.");
+      setComplexity("❌ Failed to analyze time complexity.");
     } finally {
       setLoadingComplexity(false);
     }
@@ -58,9 +64,14 @@ function SubmissionDetails() {
         <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Submission Details</h2>
         <button
           onClick={handleGetComplexity}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded shadow transition"
+          disabled={complexityFetched}
+          className={`${
+            complexityFetched
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-indigo-600 hover:bg-indigo-700"
+          } text-white font-semibold px-4 py-2 rounded shadow transition`}
         >
-          ⏱️ Get Time Complexity
+          ⏱️ {complexityFetched ? "Time Complexity Fetched" : "Get Time Complexity"}
         </button>
       </div>
 
@@ -97,14 +108,13 @@ function SubmissionDetails() {
         </pre>
       </div>
 
-      {loadingComplexity && (
-        <p className="mt-4 text-sm text-gray-500">⏳ Analyzing...</p>
-      )}
-      {complexity && (
-        <div className="mt-4 p-3 bg-gray-100 dark:bg-gray-800 rounded text-sm whitespace-pre-wrap">
-          {complexity}
+      {/* Modal */}
+      <Modal isOpen={complexityModalOpen} onClose={() => setComplexityModalOpen(false)}>
+        <h2 className="text-xl font-semibold mb-4">Time Complexity Analysis</h2>
+        <div className="whitespace-pre-wrap text-sm">
+          {loadingComplexity ? "⏳ Analyzing..." : complexity}
         </div>
-      )}
+      </Modal>
     </div>
   );
 }

@@ -14,6 +14,9 @@ const problemSchema = new mongoose.Schema({
       hidden: {type: Boolean, default: false}
     }
   ],
+  solutions: {
+    type: String, 
+  },
   createdAt: { type: Date, default: Date.now }
 });
 

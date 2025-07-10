@@ -25,12 +25,13 @@ function UpdateProblem() {
     title: '',
     statement: '',
     difficulty: '',
-    tags: '',
+    tags: [],
     testCases: [{ input: '', output: '', explanation: '', hidden: false }],
-    constraints: ['']
+    constraints: [''],
+    solutions: ''
   });
   const [message, setMessage] = useState('');
-  const [tags, setTags]=useState([]);
+  const [tags, setTags] = useState([]);
 
   useEffect(() => {
     const fetchProblem = async () => {
@@ -40,7 +41,7 @@ function UpdateProblem() {
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        const { title, statement, difficulty, tags, testCases, constraints } = res.data.problem;
+        const { title, statement, difficulty, tags, testCases, constraints, solutions } = res.data.problem;
 
         setFormData({
           title,
@@ -53,7 +54,8 @@ function UpdateProblem() {
             explanation: tc.explanation || '',
             hidden: tc.hidden || false
           })),
-          constraints: constraints && constraints.length > 0 ? constraints : ['']
+          constraints: constraints && constraints.length > 0 ? constraints : [''],
+          solutions:solutions || ''
         });
 
         setTags(tags);
@@ -134,7 +136,7 @@ function UpdateProblem() {
           statement: formData.statement.trim(),
           tags: tags,
           testCases: validTestCases,
-          constraints: validConstraints
+          constraints: validConstraints,
         },
         {
           headers: { Authorization: `Bearer ${token}` }
@@ -320,6 +322,15 @@ function UpdateProblem() {
                 </label>
               ))}
             </div>
+            <label className="block mb-2 dark:text-gray-200 font-medium">Solutions (Markdown supported):</label>
+            <textarea
+              name="solutions"
+              placeholder="Write detailed explanation and code solution using Markdown..."
+              value={formData.solutions}
+              onChange={handleChange}
+              rows="6"
+              className="w-full border px-3 py-2 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            />
 
             <button
               type="submit"
