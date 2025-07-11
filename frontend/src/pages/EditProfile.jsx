@@ -67,7 +67,7 @@ export default function EditProfile() {
   if (loading) return <p className="p-4">Loading profile...</p>;
 
   return (
-    <div className="min-h-screen py-8 bg-gradient-to-br from-purple-300 via-rose-200 to-pink-300 dark:from-blue-900 dark:via-black/90 dark:to-blue-900">
+    <div className="min-h-screen py-8 bg-gradient-to-br from-purple-300 via-rose-200 to-pink-300 dark:from-[#000000] dark:via-25% dark:via-[#302e3e] dark:to-[#000000]">
       <div className="max-w-lg mx-auto bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md border-3 dark:shadow-amber-50 shadow-pink-400">
         <h2 className="text-2xl font-bold mb-4 text-center dark:text-white">Edit Profile</h2>
         <form onSubmit={handleSubmit} className="space-y-4">

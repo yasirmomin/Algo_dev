@@ -103,7 +103,7 @@ function Problems() {
   return (
     <div className="min-h-screen w-full bg-gradient-to-tr 
   from-[#5896ed] via-45% via-[#dcd5e2] to-[#ff7ea7]
-  dark:from-[#0d006e] dark:via-25% dark:via-[#31258d] dark:to-[#531515]
+  dark:from-[#000000] dark:via-25% dark:via-[#302e3e] dark:to-[#000000]
   bg-fixed
   py-10">
 

@@ -83,7 +83,7 @@ function Profile() {
   return (
     <div className="min-h-screen w-full bg-gradient-to-tr 
   from-[#5896ed] via-45% via-[#dcd5e2] to-[#ff7ea7]
-  dark:from-[#0d006e] dark:via-25% dark:via-[#31258d] dark:to-[#531515]
+  dark:from-[#000000] dark:via-25% dark:via-[#302e3e] dark:to-[#000000]
   bg-fixed
   py-10">
       <div className="max-w-xl mx-auto mt-8">
@@ -107,7 +107,7 @@ function Profile() {
             </div>
             <button
               onClick={() => navigate("/edit-profile")}
-              className="mt-2 bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded shadow transition relative left-45 bottom-12"
+              className="mt-2 bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded shadow transition  "
             >
               Edit Profile
             </button>

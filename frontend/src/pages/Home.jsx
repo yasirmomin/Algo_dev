@@ -1,24 +1,25 @@
 import { Link } from "react-router-dom";
-import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
+import { FaTwitter, FaInstagram, FaLinkedin, FaEnvelope } from "react-icons/fa";
 
 
 export default function Home() {
+
   return (
     <div className="dark:bg-[#000000] transition-colors duration-300">
       {/* Hero Section */}
       <section className="min-h-screen flex items-center justify-center px-6 bg-[url('/src/assets/light.png')] dark:bg-[url('/src/assets/dark.jpg')]"
-      style={{
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundAttachment: "fixed",
-          }}>
+        style={{
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+        }}>
         <div
           className=" p-8 md:p-12 text-center transition-all duration-500"
-          
+
         >
 
           <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r bg-clip-text text-transparent from-[#9c4bff] to-[#04b5a4] drop-shadow-md mb-6">
-            🚀 Welcome to the Online Judge
+            🚀 Welcome to the CodeJury
           </h1>
           <p className="text-lg text-[#746e6e] mb-8">
             Solve, compete, and sharpen your coding skills with real-world challenges.
@@ -57,10 +58,10 @@ export default function Home() {
                   "Get detailed execution results and performance metrics immediately.",
               },
               {
-                icon: "🏆",
-                title: "Timed Contests",
+                icon: "💡",
+                title: "Smart Assistance",
                 description:
-                  "Participate in regular competitions with leaderboards and rewards.",
+                  "Get AI-powered hints and code feedback to accelerate your learning.",
               },
             ].map((feature) => (
               <div
@@ -82,9 +83,9 @@ export default function Home() {
       <footer className="bg-[#1E1E1E] text-gray-400 py-12 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h2 className="text-white font-bold text-xl mb-2">Online Judge</h2>
+            <h2 className="text-white font-bold text-xl mb-2">CodeJury</h2>
             <p className="text-[#E1E1E1]">
-              A modern online judge platform by Yasir to empower developers.
+              Empowering developers to solve problems, compete, and level up their coding journey.
             </p>
           </div>
 
@@ -95,10 +96,10 @@ export default function Home() {
                 <Link to="/" className="hover:text-[#BB86FC]">Home</Link>
               </li>
               <li>
-                <Link to="/contests" className="hover:text-[#BB86FC]">Contests</Link>
+                <Link to="/problems" className="hover:text-[#BB86FC]">Problems</Link>
               </li>
               <li>
-                <Link to="/problems" className="hover:text-[#BB86FC]">Problems</Link>
+                <Link to="/about" className="hover:text-[#BB86FC]">About</Link>
               </li>
             </ul>
           </div>
@@ -106,15 +107,19 @@ export default function Home() {
           <div>
             <h2 className="text-white font-bold text-lg mb-2">Connect</h2>
             <div className="flex space-x-4">
-              <a href="#" className="hover:text-[#BB86FC] text-xl"><FaFacebook /></a>
-              <a href="#" className="hover:text-[#BB86FC] text-xl"><FaTwitter /></a>
-              <a href="#" className="hover:text-[#BB86FC] text-xl"><FaInstagram /></a>
+              <a href="https://www.linkedin.com/in/yasirmomin" target="_blank"
+                rel="noopener noreferrer" className="hover:text-[#BB86FC] text-xl"><FaLinkedin /></a>
+              <a href="https://x.com/Yasir_Momin10" target="_blank"
+                rel="noopener noreferrer" className="hover:text-[#BB86FC] text-xl"><FaTwitter /></a>
+              <a href="https://www.instagram.com/yasir_syed01/" target="_blank"
+                rel="noopener noreferrer" className="hover:text-[#BB86FC] text-xl"><FaInstagram /></a>
+              <a href="mailto:yasirmn11@gmail.com" className="hover:text-[#BB86FC] text-xl"><FaEnvelope /></a>
             </div>
           </div>
         </div>
 
         <div className="mt-10 border-t border-gray-700 pt-6 text-center text-sm text-gray-500">
-          © 2025 OnlineJudge Platform. All rights reserved.
+          © 2025 CodeJury Platform.
         </div>
       </footer>
     </div>

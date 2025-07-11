@@ -37,10 +37,12 @@ function Navbar() {
   return (
     <div className="bg-white/60 dark:bg-[#1E1E1E]  border-b border-gray-200 dark:border-gray-800 shadow-sm ">
     <nav className=" py-4 px-6 flex items-center justify-between">
+      <div className="flex">
+        <img src="/src/assets/logo.jpeg" className="h-9 w-10 mx-2"/>
       <Link to="/" className="text-2xl font-extrabold tracking-tight text-indigo-600 dark:text-white">
-        Online Judge
+        CodeJury
       </Link>
-
+    </div>
       <div className="flex items-center space-x-2 md:space-x-4 text-sm font-medium">
         <Link
           to="/"

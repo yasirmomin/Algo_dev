@@ -17,6 +17,7 @@ import SubmissionList from './pages/SubmissionList';
 import SubmissionDetails from './pages/SubmissionDetails';
 import EditProfile from './pages/EditProfile';
 import MySubmissions from './pages/MySubmissions';
+import About from './pages/About';
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/problems" element={<Problems />} />
+        <Route path="/about" element={<About/>} />
         <Route path="*" element={<h1>Page Not Found</h1>} />
         <Route path='/profile' element={
           <ProtectedRoutes><Profile /></ProtectedRoutes>
@@ -51,6 +53,7 @@ function App() {
 
         <Route path="/edit-profile" element={<ProtectedRoutes><EditProfile /></ProtectedRoutes>} />
         <Route path="/my-submissions" element={<MySubmissions />} />
+        
       </Routes>
     </Router>
 
