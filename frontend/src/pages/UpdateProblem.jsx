@@ -37,7 +37,7 @@ function UpdateProblem() {
     const fetchProblem = async () => {
       const token = localStorage.getItem('token');
       try {
-        const res = await axios.get(`http://localhost:3000/problems/${id}`, {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/problems/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -129,7 +129,7 @@ function UpdateProblem() {
     const token = localStorage.getItem('token');
     try {
       await axios.put(
-        `http://localhost:3000/problems/${id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/problems/${id}`,
         {
           ...formData,
           title: formData.title.trim(),

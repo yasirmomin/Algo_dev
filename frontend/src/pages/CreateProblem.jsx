@@ -92,7 +92,7 @@ function CreateProblem() {
     const token = localStorage.getItem('token');
     try {
       const res = await axios.post(
-        'http://localhost:3000/problems',
+        `${import.meta.env.VITE_BACKEND_URL}/problems`,
         {
           ...formData,
           title: formData.title.trim(),

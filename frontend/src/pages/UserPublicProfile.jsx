@@ -16,7 +16,7 @@ export default function UserPublicProfile() {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const res = await axios.get(`http://localhost:3000/user/${userId}`, {
+                const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/${userId}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setProfile(res.data.user);
@@ -27,7 +27,7 @@ export default function UserPublicProfile() {
 
         const fetchCurrentUser = async () => {
             try {
-                const res = await axios.get(`http://localhost:3000/user/me`, {
+                const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/me`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setCurrentUser(res.data.user);
@@ -45,14 +45,14 @@ export default function UserPublicProfile() {
     const handleAddFriend = async () => {
         try {
             const res = await axios.post(
-                `http://localhost:3000/user/add-friend/${userId}`,
+                `${import.meta.env.VITE_BACKEND_URL}/user/add-friend/${userId}`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             setMessage(res.data.message || "Friend added successfully");
 
             // Re-fetch current user to update friends list
-            const updated = await axios.get(`http://localhost:3000/user/me`, {
+            const updated = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/me`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setCurrentUser(updated.data.user);
@@ -65,12 +65,12 @@ export default function UserPublicProfile() {
     const handleRemoveFriend = async () => {
         try {
             await axios.post(
-                `http://localhost:3000/user/remove-friend/${userId}`,
+                `${import.meta.env.VITE_BACKEND_URL}/user/remove-friend/${userId}`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
-            const updated = await axios.get(`http://localhost:3000/user/me`, {
+            const updated = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/me`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setCurrentUser(updated.data.user);

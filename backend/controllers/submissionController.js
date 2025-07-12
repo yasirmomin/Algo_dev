@@ -26,7 +26,7 @@ const submitCode = async (req, res) => {
         for (let i = 0; i < problem.testCases.length; i++) {
             const testCase = problem.testCases[i];
             try {
-                const response = await axios.post("http://localhost:8000/run", {
+                const response = await axios.post(`${process.env.VITE_COMPILER_URL}/run`, {
                     code,
                     language,
                     input: testCase.input,

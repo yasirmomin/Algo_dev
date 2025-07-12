@@ -15,7 +15,7 @@ function Login() {
     e.preventDefault();
     setMessage("");
     try {
-      const res = await axios.post("http://localhost:3000/login", formData);
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/login`, formData);
       const { token, user } = res.data;
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));

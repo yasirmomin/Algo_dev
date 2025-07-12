@@ -16,7 +16,7 @@ export default function EditProfile() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/user/me", {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setForm({
@@ -43,7 +43,7 @@ export default function EditProfile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-       await axios.put("http://localhost:3000/user/me", form, {
+       await axios.put(`${import.meta.env.VITE_BACKEND_URL}/user/me`, form, {
         headers: { Authorization: `Bearer ${token}` },
       });
       Swal.fire({

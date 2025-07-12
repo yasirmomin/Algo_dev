@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
 const UserSearch = ({ onAddFriend, onRemoveFriend, currentUser }) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
@@ -23,7 +22,7 @@ const UserSearch = ({ onAddFriend, onRemoveFriend, currentUser }) => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get(
-        `http://localhost:3000/user/search?username=${encodeURIComponent(query)}`,
+        `${import.meta.env.VITE_BACKEND_URL}/user/search?username=${encodeURIComponent(query)}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setResults(res.data.users);

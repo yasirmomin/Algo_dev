@@ -14,7 +14,7 @@ function ProtectedRoutes({ children }) {
       }
 
       try {
-        const res = await axios.get('http://localhost:3000/verify', {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/verify`, {
           headers: {
             Authorization: `Bearer ${token}`
           }

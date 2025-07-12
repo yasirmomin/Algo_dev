@@ -13,7 +13,7 @@ function Navbar() {
       const token = localStorage.getItem("token");
       if (!token) return;
       try {
-        await axios.get("http://localhost:3000/verify", {
+        await axios.get(`${import.meta.env.VITE_BACKEND_URL}/verify`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setIsAuthenticated(true);

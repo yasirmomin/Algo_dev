@@ -16,7 +16,7 @@ function SubmissionDetails() {
   useEffect(() => {
     const fetchSubmissionDetails = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/problems/${id}/${submissionId}`, {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/problems/${id}/${submissionId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -37,7 +37,7 @@ function SubmissionDetails() {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/ai/complexity",
+        `${import.meta.env.VITE_BACKEND_URL}/ai/complexity`,
         { code: submission.code },
         {
           headers: {

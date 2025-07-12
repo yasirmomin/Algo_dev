@@ -35,7 +35,7 @@ function Problems() {
       const queryParams = new URLSearchParams();
       if (difficultyFilter) queryParams.append('difficulty', difficultyFilter);
       if (tagFilter.length > 0) queryParams.append('tags', tagFilter.join(','));
-      const res = await axios.get(`http://localhost:3000/problems?${queryParams.toString()}`);
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/problems?${queryParams.toString()}`);
       setProblems(res.data.problems);
     } catch (error) {
       console.error(
@@ -50,7 +50,7 @@ function Problems() {
     const token = localStorage.getItem("token");
     if (!window.confirm("Are you sure you want to delete this problem?")) return;
     try {
-      await axios.delete(`http://localhost:3000/problems/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/problems/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchProblems();
@@ -70,7 +70,7 @@ function Problems() {
       const token = localStorage.getItem("token");
       if (!token) return;
       try {
-        const res = await axios.get("http://localhost:3000/verify", {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/verify`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setIsAdmin(res.data.user?.isAdmin || false);

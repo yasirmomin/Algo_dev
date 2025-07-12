@@ -68,7 +68,7 @@ function ProblemPage() {
 
   if (token) {
     axios
-      .get("http://localhost:3000/verify", {
+      .get(`${import.meta.env.VITE_BACKEND_URL}/verify`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -85,7 +85,7 @@ function ProblemPage() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/problems/${id}`)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/problems/${id}`)
       .then((res) => setProblem(res.data.problem))
       .catch((err) => console.error(err));
   }, [id]);
@@ -114,7 +114,7 @@ function ProblemPage() {
   const handleRun = async () => {
     try {
       const res = await axios.post(
-        "http://localhost:8000/run",
+        `${import.meta.env.VITE_COMPILER_URL}/run`,
         { code, language, input },
         {
           headers: {
@@ -144,7 +144,7 @@ function ProblemPage() {
     const token = localStorage.getItem("token");
     try {
       const res = await axios.post(
-        "http://localhost:3000/submit",
+        `${import.meta.env.VITE_BACKEND_URL}/submit`,
         {
           code,
           language,
@@ -188,7 +188,7 @@ function ProblemPage() {
     setLoadingAI(true);
     try {
       const res = await axios.post(
-        "http://localhost:3000/ai/feedback",
+        `${import.meta.env.VITE_BACKEND_URL}/ai/feedback`,
         {
           code,
           problemName: problem.title,
@@ -224,7 +224,7 @@ function ProblemPage() {
     setHintLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:3000/ai/hint",
+        `${import.meta.env.VITE_BACKEND_URL}/ai/hint`,
         {
           code,
           problemName: problem.title,

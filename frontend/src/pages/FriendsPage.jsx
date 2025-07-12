@@ -13,7 +13,7 @@ const FriendsPage = () => {
   useEffect(() => {
     const fetchFriends = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/user/friends",
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/friends`,
           {
             headers: { Authorization: `Bearer ${token}` }
           });

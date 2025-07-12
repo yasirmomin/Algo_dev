@@ -9,7 +9,7 @@ export default function MySubmissions() {
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/my-submissions", {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/my-submissions`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setSubmissions(res.data.submissions);

@@ -1,1 +1,4 @@
 .DS_Store
+keys
+CodeJury-Server.pem
+.env

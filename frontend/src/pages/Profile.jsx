@@ -12,7 +12,7 @@ function Profile() {
 
   const fetchUser = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/user/me", {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(res.data.user);
@@ -31,7 +31,7 @@ function Profile() {
   const handleAddFriend = async (friendId) => {
     try {
       const res = await axios.post(
-        `http://localhost:3000/user/add-friend/${friendId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/user/add-friend/${friendId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -56,7 +56,7 @@ function Profile() {
   const handleRemoveFriend = async (friendId) => {
     try {
       const res = await axios.post(
-        `http://localhost:3000/user/remove-friend/${friendId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/user/remove-friend/${friendId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );

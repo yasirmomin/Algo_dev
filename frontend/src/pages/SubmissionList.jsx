@@ -16,7 +16,7 @@ function SubmissionList({refreshSignal}) {
       return;
     }
     try {
-      const res = await axios.get("http://localhost:3000/verify", {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/verify`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(res.data.user); // user is authenticated
@@ -33,7 +33,7 @@ function SubmissionList({refreshSignal}) {
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/problems/${id}/submissions`, {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/problems/${id}/submissions`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

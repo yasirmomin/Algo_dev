@@ -24,7 +24,7 @@ function Register() {
     e.preventDefault();
     setMessage("");
     try {
-      const res = await axios.post("http://localhost:3000/register", formData);
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/register`, formData);
       if (res.status === 201) {
         setMessage("✅ Registered successfully! Redirecting...");
         setTimeout(() => navigate("/login"), 1500);
