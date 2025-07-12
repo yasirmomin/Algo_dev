@@ -6,7 +6,6 @@ const isAdmin = require('../middlewares/isAdmin');
 const loginCode = async (req, res) => {
     try {
         const { email, password } = req.body;
-        // Basic validation
         const errors = [];
         if (!email) errors.push("email");
         if (!password) errors.push("password");
@@ -24,7 +23,6 @@ const loginCode = async (req, res) => {
             return res.status(401).json({ message: "Incorrect password" });
         }
 
-        // generate and send the JWT token
         const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin, }, process.env.SECRET_KEY, { expiresIn: '1h' });
 
         const userResponse = {
@@ -72,8 +70,6 @@ const registerCode = async (req, res) => {
             return res.status(400).json({ message: "Username is required" });
         }
 
-
-        // check if the user already exists  (we need database)
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).send({ message: `User already exists with the given email` });
@@ -86,7 +82,6 @@ const registerCode = async (req, res) => {
             return res.status(400).json({ message: 'Please enter all fields' });
         }
 
-        // validations
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             return res.status(400).json({ message: "Invalid email format" });
@@ -110,10 +105,8 @@ const registerCode = async (req, res) => {
             });
         }
 
-        // hashing/encrypt the password
         const hashedPassword = await bcrypt.hash(password, 10)
 
-        // create a new user
         const user = new User({
             firstName,
             lastName,
@@ -123,8 +116,6 @@ const registerCode = async (req, res) => {
             phone
         });
 
-
-        // save the user to the database
         await user.save();
 
         res.status(201).json({

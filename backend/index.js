@@ -11,12 +11,10 @@ app.use(cors({
     credentials: true
 }));
 
-// middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 DBConnection();
 
-// routes
 app.use("/",router);
 
 app.listen(process.env.PORT, () => {

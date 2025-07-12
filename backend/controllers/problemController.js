@@ -10,7 +10,6 @@ const getAllProblems = async (req, res) => {
         }
 
         if (tags) {
-            // tags=Array,Dynamic Programming
             const tagsArray = tags.split(',').map((t) => t.trim());
             filter.tags = { $all: tagsArray };
         }
