@@ -36,74 +36,74 @@ function Navbar() {
 
   return (
     <div className="bg-white/60 dark:bg-[#1E1E1E]  border-b border-gray-200 dark:border-gray-800 shadow-sm ">
-    <nav className=" py-4 px-6 flex items-center justify-between">
-      <div className="flex">
-        <img src="/src/assets/logo.jpeg" className="h-9 w-10 mx-2"/>
-      <Link to="/" className="text-2xl font-extrabold tracking-tight text-indigo-600 dark:text-white">
-        CodeJury
-      </Link>
-    </div>
-      <div className="flex items-center space-x-2 md:space-x-4 text-sm font-medium">
-        <Link
-          to="/"
-          className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-white transition"
-        >
-          Home
-        </Link>
+      <nav className=" py-4 px-6 flex items-center justify-between">
 
-        {!isAuthenticated ? (
-          <>
-            <Link
-              to="/login"
-              className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-white transition"
-            >
-              Login
-            </Link>
-            <Link
-              to="/register"
-              className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-white transition"
-            >
-              Register
-            </Link>
-          </>
-        ) : (
-          <>
-            <Link
-              to="/profile"
-              className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-white transition"
-            >
-              Profile
-            </Link>
-            
-            <button
-              onClick={handleLogout}
-              className="text-gray-700 dark:text-gray-300 hover:text-red-500 transition"
-            >
-              Logout
-            </button>
-          </>
-          
-        )}
 
-        <button
-          onClick={() => {
-            const html = document.documentElement;
-            if (html.classList.contains("dark")) {
-              html.classList.remove("dark");
-              localStorage.theme = "light";
-              setIsDark(false);
-            } else {
-              html.classList.add("dark");
-              localStorage.theme = "dark";
-              setIsDark(true);
-            }
-          }}
-          className="border px-3 py-1 rounded-full dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-        >
-          {isDark ? "🌙 Dark" : "☀️ Light"}
-        </button>
-      </div>
-    </nav>
+          <Link to="/" className="text-2xl font-extrabold tracking-tight text-indigo-600 dark:text-white">
+            CodeJury
+          </Link>
+
+        <div className="flex items-center space-x-2 md:space-x-4 text-sm font-medium">
+          <Link
+            to="/"
+            className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-white transition"
+          >
+            Home
+          </Link>
+
+          {!isAuthenticated ? (
+            <>
+              <Link
+                to="/login"
+                className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-white transition"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-white transition"
+              >
+                Register
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/profile"
+                className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-white transition"
+              >
+                Profile
+              </Link>
+
+              <button
+                onClick={handleLogout}
+                className="text-gray-700 dark:text-gray-300 hover:text-red-500 transition"
+              >
+                Logout
+              </button>
+            </>
+
+          )}
+
+          <button
+            onClick={() => {
+              const html = document.documentElement;
+              if (html.classList.contains("dark")) {
+                html.classList.remove("dark");
+                localStorage.theme = "light";
+                setIsDark(false);
+              } else {
+                html.classList.add("dark");
+                localStorage.theme = "dark";
+                setIsDark(true);
+              }
+            }}
+            className="border px-3 py-1 rounded-full dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+          >
+            {isDark ? "🌙 Dark" : "☀️ Light"}
+          </button>
+        </div>
+      </nav>
     </div>
   );
 }

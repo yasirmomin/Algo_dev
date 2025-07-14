@@ -49,10 +49,14 @@ function ProblemPage() {
   const [output, setOutput] = useState("");
   const [input, setInput] = useState("");
   const [theme, setTheme] = useState("light");
+
   const [loadingAI, setLoadingAI] = useState(false);
   const [hintLoading, setHintLoading] = useState(false);
+  const [runLoading, setRunLoading] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalType, setModalType] = useState(""); // "hint" or "feedback"
+  const [modalType, setModalType] = useState("");
   const [aiHint, setAiHint] = useState("");
   const [aiFeedback, setAiFeedback] = useState("");
   const [lastHintCode, setLastHintCode] = useState("");
@@ -112,6 +116,7 @@ function ProblemPage() {
   }, [code, id, language]);
 
   const handleRun = async () => {
+    setRunLoading(true);
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_COMPILER_URL}/run`,
@@ -137,10 +142,13 @@ function ProblemPage() {
         error.response?.data?.error ||
           "An error occurred while running the code."
       );
+    } finally {
+      setRunLoading(false);
     }
   };
 
   const handleSubmit = async () => {
+    setSubmitLoading(true);
     const token = localStorage.getItem("token");
     try {
       const res = await axios.post(
@@ -175,6 +183,8 @@ function ProblemPage() {
           error.response?.data?.message ||
           "An error occurred while running the code."
       );
+    } finally {
+      setSubmitLoading(false);
     }
   };
 
@@ -268,7 +278,6 @@ function ProblemPage() {
         className="h-[90%] relative flex rounded-lg custom-split"
         gutterSize={7}
       >
-        {/* Left Pane */}
         <div className="p-6 h-screen overflow-y-scroll bg-white dark:bg-white/15 border dark:border-gray-700 rounded-2xl shadow-inner">
           {isSolutions ? (
             <Solutions solutions={problem.solutions} />
@@ -281,7 +290,6 @@ function ProblemPage() {
           )}
         </div>
 
-        {/* Right Pane */}
         <div className="flex flex-col gap-3 h-screen p-6 bg-white dark:bg-white/15 border dark:border-gray-700 rounded-2xl shadow-inner">
           <div className="flex items-center justify-between mb-2">
             <select
@@ -303,21 +311,12 @@ function ProblemPage() {
             >
               🔄 Reset Code
             </button>
-            {theme === "dark" ? (
-              <button
-                className="border py-1 px-3 rounded-xl dark:text-gray-300 cursor-pointer font-semibold dark:hover:bg-gray-500 hover:bg-gray-200 transition"
-                onClick={handleThemeChange}
-              >
-                🌙 Dark
-              </button>
-            ) : (
-              <button
-                className="border p-1 px-3 rounded-xl cursor-pointer dark:text-gray-300 font-semibold dark:hover:bg-gray-500 hover:bg-gray-200 transition"
-                onClick={handleThemeChange}
-              >
-                ☀️ Light
-              </button>
-            )}
+            <button
+              className="border p-1 px-3 rounded-xl cursor-pointer dark:text-gray-300 font-semibold dark:hover:bg-gray-500 hover:bg-gray-200 transition"
+              onClick={handleThemeChange}
+            >
+              {theme === "dark" ? "🌙 Dark" : "☀️ Light"}
+            </button>
           </div>
 
           <CodeEditor
@@ -335,18 +334,24 @@ function ProblemPage() {
             rows="3"
           />
 
-          <div className="flex gap-3">
+          <div className="flex gap-3 flex-wrap">
             <button
               onClick={handleRun}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded shadow transition"
+              disabled={runLoading}
+              className={`${
+                runLoading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+              } text-white font-semibold px-4 py-2 rounded shadow transition`}
             >
-              ▶️ Run Code
+              {runLoading ? "⏳ Running..." : "▶️ Run Code"}
             </button>
             <button
               onClick={handleSubmit}
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded shadow transition"
+              disabled={submitLoading}
+              className={`${
+                submitLoading ? "bg-gray-400" : "bg-green-600 hover:bg-green-700"
+              } text-white font-semibold px-4 py-2 rounded shadow transition`}
             >
-              ✅ Submit Code
+              {submitLoading ? "⏳ Submitting..." : "✅ Submit Code"}
             </button>
             <button
               onClick={handleCodeFeedback}
