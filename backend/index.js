@@ -7,7 +7,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 app.use(cors({
-    origin: true,
+    origin: "https://codejuryonline.vercel.app",
     credentials: true
 }));
 
