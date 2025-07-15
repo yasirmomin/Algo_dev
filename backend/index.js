@@ -7,9 +7,14 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 app.use(cors({
-    origin: "https://codejuryonline.vercel.app",
+    origin: [
+        "https://codejuryonline.vercel.app",
+        "https://codejury.info",
+        "https://www.codejury.info",
+    ],
     credentials: true
 }));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

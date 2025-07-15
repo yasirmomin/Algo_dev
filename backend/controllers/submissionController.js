@@ -8,11 +8,26 @@ const submitCode = async (req, res) => {
     if (!code || !language || !problemId) {
         return res.status(400).json({ message: "Code, language, and problemId are required." });
     }
+
     let lastOutput = "";
+
     try {
         const problem = await Problem.findById(problemId);
         if (!problem) {
             return res.status(404).json({ message: "Problem not found." });
+        }
+
+        const existingSubmission = await Submission.findOne({
+            user: req.user.id,
+            problem: problemId,
+            code: code,
+            createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+        });
+
+        if (existingSubmission) {
+            return res.status(400).json({
+                message: "You have already submitted this exact code for this problem."
+            });
         }
 
         if (!problem.testCases || problem.testCases.length === 0) {
@@ -47,23 +62,26 @@ const submitCode = async (req, res) => {
                 }
             }
             catch (err) {
+                const errorText =
+                    err.response?.data?.error ||
+                    err.response?.data?.message ||
+                    "Unknown Error";
 
-                let errorMessage = err.response?.data.message || "Unknown Error";
-
-                if (errorMessage.includes("Time Limit Exceeded")) {
+                if (errorText.includes("Time Limit Exceeded")) {
                     verdict = `Time Limit Exceeded on Test Case ${i + 1}`;
-                } else if (errorMessage.includes("Compilation Error")) {
+                } else if (errorText.includes("Compilation Error")) {
                     verdict = "Compilation Error";
-                } else if (errorMessage.includes("Runtime Error")) {
+                } else if (errorText.includes("Runtime Error")) {
                     verdict = "Runtime Error";
                 } else {
-                    verdict = "Compilation Error";
+                    verdict = "Unknown Error";
                 }
 
-                lastOutput = errorMessage;
+                lastOutput = errorText;
                 break;
             }
         }
+
         const submission = new Submission({
             user: req.user.id,
             problem: problemId,
@@ -74,6 +92,7 @@ const submitCode = async (req, res) => {
         });
 
         await submission.save();
+
         if (verdict === "Accepted") {
             const user = await require("../models/User").findById(req.user.id);
             if (!user.problemsSolved.includes(problemId)) {
@@ -81,7 +100,6 @@ const submitCode = async (req, res) => {
                 await user.save();
             }
         }
-
 
         return res.json({
             success: true,
@@ -93,6 +111,7 @@ const submitCode = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
 
 const getSubmissionById = async (req, res) => {
     try {
@@ -122,16 +141,16 @@ const getSubmissionsForProblem = async (req, res) => {
 };
 
 const getAllMySubmissions = async (req, res) => {
-  try {
-    const submissions = await Submission.find({ user: req.user.id })
-      .populate("problem", "title") // get problem title
-      .sort({ createdAt: -1 });
+    try {
+        const submissions = await Submission.find({ user: req.user.id })
+            .populate("problem", "title") // get problem title
+            .sort({ createdAt: -1 });
 
-    res.json({ submissions });
-  } catch (err) {
-    console.error("Error fetching my submissions:", err);
-    res.status(500).json({ message: "Internal server error" });
-  }
+        res.json({ submissions });
+    } catch (err) {
+        console.error("Error fetching my submissions:", err);
+        res.status(500).json({ message: "Internal server error" });
+    }
 };
 
-module.exports = { submitCode, getSubmissionById, getSubmissionsForProblem ,getAllMySubmissions };
+module.exports = { submitCode, getSubmissionById, getSubmissionsForProblem, getAllMySubmissions };
