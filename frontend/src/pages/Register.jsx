@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
@@ -14,7 +14,17 @@ function Register() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/"); // or "/home", "/dashboard" — wherever you want
+    }
+  }, []);
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,16 +33,20 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
+    setLoading(true);
     try {
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/register`, formData);
       if (res.status === 201) {
         setMessage("✅ Registered successfully! Redirecting...");
-        setTimeout(() => navigate("/login"), 1500);
+        setTimeout(() => navigate("/"), 1500);
       }
     } catch (error) {
       setMessage(error.response?.data?.message || "Something went wrong.");
+    } finally {
+      setLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-[rgb(254,167,226)] via-25% via-[#ffb4b4] to-blue-300 dark:from-[#000000] dark:via-25% dark:via-[#302e3e] dark:to-[#000000]">
@@ -76,16 +90,20 @@ function Register() {
 
           <button
             type="submit"
-            className="w-full py-3 rounded bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold hover:from-indigo-600 hover:to-purple-600 transition shadow"
+            disabled={loading}
+            className={`w-full py-3 rounded font-semibold shadow transition ${loading
+                ? "bg-gray-400 cursor-not-allowed text-white"
+                : "bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white"
+              }`}
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </button>
+
 
           {message && (
             <p
-              className={`mt-3 text-center text-sm ${
-                message.startsWith("✅") ? "text-green-600" : "text-red-600"
-              }`}
+              className={`mt-3 text-center text-sm ${message.startsWith("✅") ? "text-green-600" : "text-red-600"
+                }`}
             >
               {message}
             </p>

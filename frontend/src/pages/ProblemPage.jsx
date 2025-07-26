@@ -68,24 +68,26 @@ function ProblemPage() {
   const isSolutions = location.pathname.includes("solutions");
   const isSubmissions = location.pathname.includes("submissions");
   const isDetail = Boolean(submissionId);
-  const token = localStorage.getItem("token");
 
-  if (token) {
-    axios
-      .get(`${import.meta.env.VITE_BACKEND_URL}/verify`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        console.log("Token is valid:", response.data);
-      })
-      .catch((error) => {
-        console.log("Token invalid or expired. Clearing storage.", error);
-        localStorage.clear();
-        window.location.href = "/login";
-      });
-  }
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios
+        .get(`${import.meta.env.VITE_BACKEND_URL}/verify`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          console.log("Token is valid:", response.data);
+        })
+        .catch((error) => {
+          console.log("Token invalid or expired. Clearing storage.", error);
+          localStorage.clear();
+          window.location.href = "/login";
+        });
+    }
+  }, []);
 
   useEffect(() => {
     axios
@@ -140,7 +142,7 @@ function ProblemPage() {
       }
       setOutput(
         error.response?.data?.error ||
-          "An error occurred while running the code."
+        "An error occurred while running the code."
       );
     } finally {
       setRunLoading(false);
@@ -164,7 +166,11 @@ function ProblemPage() {
           },
         }
       );
-      setOutput(`Verdict: ${res.data.verdict}`);
+      if (res.data.verdict === "Accepted") {
+        setOutput(`✅ Verdict: ${res.data.verdict}`);
+      } else {
+        setOutput(`❌ Verdict: ${res.data.verdict}\n\n${res.data.error || ""}`);
+      }
       navigate(`/problems/${id}/submissions`);
       setRefreshSignal(Date.now());
     } catch (error) {
@@ -180,8 +186,8 @@ function ProblemPage() {
       }
       setOutput(
         error.response?.data?.error ||
-          error.response?.data?.message ||
-          "An error occurred while running the code."
+        error.response?.data?.message ||
+        "An error occurred while running the code."
       );
     } finally {
       setSubmitLoading(false);
@@ -338,38 +344,34 @@ function ProblemPage() {
             <button
               onClick={handleRun}
               disabled={runLoading}
-              className={`${
-                runLoading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
-              } text-white font-semibold px-4 py-2 rounded shadow transition`}
+              className={`${runLoading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+                } text-white font-semibold px-4 py-2 rounded shadow transition`}
             >
               {runLoading ? "⏳ Running..." : "▶️ Run Code"}
             </button>
             <button
               onClick={handleSubmit}
               disabled={submitLoading}
-              className={`${
-                submitLoading ? "bg-gray-400" : "bg-green-600 hover:bg-green-700"
-              } text-white font-semibold px-4 py-2 rounded shadow transition`}
+              className={`${submitLoading ? "bg-gray-400" : "bg-green-600 hover:bg-green-700"
+                } text-white font-semibold px-4 py-2 rounded shadow transition`}
             >
               {submitLoading ? "⏳ Submitting..." : "✅ Submit Code"}
             </button>
             <button
               onClick={handleCodeFeedback}
               disabled={loadingAI}
-              className={`${
-                loadingAI ? "bg-gray-400" : "bg-indigo-600 hover:bg-indigo-700"
-              } text-white font-semibold px-4 py-2 rounded shadow transition`}
+              className={`${loadingAI ? "bg-gray-400" : "bg-indigo-600 hover:bg-indigo-700"
+                } text-white font-semibold px-4 py-2 rounded shadow transition`}
             >
               {loadingAI ? "🧠 Thinking..." : "💡 Get Code Feedback"}
             </button>
             <button
               onClick={handleGetHint}
               disabled={hintLoading}
-              className={`${
-                hintLoading
+              className={`${hintLoading
                   ? "bg-gray-400"
                   : "bg-amber-400 hover:bg-amber-500"
-              } text-white font-semibold px-4 py-2 rounded shadow transition`}
+                } text-white font-semibold px-4 py-2 rounded shadow transition`}
             >
               {hintLoading ? "🧠 Thinking..." : "🧠 Get Hint"}
             </button>

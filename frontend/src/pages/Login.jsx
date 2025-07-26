@@ -1,11 +1,23 @@
 import React, { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import axios from "axios";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/");
+    }
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -14,6 +26,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
+    setLoading(true);
     try {
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/login`, formData);
       const { token, user } = res.data;
@@ -25,21 +38,23 @@ function Login() {
       }
     } catch (error) {
       setMessage(error.response?.data?.message || "Login Failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
+
   return (
     <div className="min-h-screen grid ">
-      
+
       <div className="flex items-center justify-center bg-gradient-to-bl from-[rgb(254,167,226)]  via-[#ffb4b4] to-blue-300 dark:from-[#000000] dark:via-25% dark:via-[#302e3e] dark:to-[#000000] px-6">
         <div className="w-full max-w-md space-y-6 bg-white/80 dark:bg-gray-900 backdrop-blur-md p-8 rounded-xl border-4 shadow border-gray-200 dark:border-gray-700">
           <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white">Login</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             {message && (
               <p
-                className={`text-sm ${
-                  message.startsWith("✅") ? "text-green-600" : "text-red-600"
-                }`}
+                className={`text-sm ${message.startsWith("✅") ? "text-green-600" : "text-red-600"
+                  }`}
               >
                 {message}
               </p>
@@ -75,10 +90,15 @@ function Login() {
 
             <button
               type="submit"
-              className="w-full py-3 rounded bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold hover:from-indigo-600 hover:to-purple-600 transition shadow"
+              disabled={loading}
+              className={`w-full py-3 rounded font-semibold shadow transition ${loading
+                  ? "bg-gray-400 cursor-not-allowed text-white"
+                  : "bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white"
+                }`}
             >
-              Login
+              {loading ? "Logging in..." : "Login"}
             </button>
+
           </form>
           <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
             Don't have an account?{" "}
