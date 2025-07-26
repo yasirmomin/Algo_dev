@@ -42,6 +42,11 @@ A full-stack Online Judge platform built with the **MERN stack** that allows use
 
 ---
 
+## 🖼️ Screenshots
+
+### 🔸 Problems Page
+![Problems](screenshots/problem-page.png)
+
 ## 🛠️ Installation
 
 ### 🖥️ Frontend
