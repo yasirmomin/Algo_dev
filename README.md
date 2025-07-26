@@ -8,9 +8,7 @@ A full-stack Online Judge platform built with the **MERN stack** that allows use
 - 🧩 **Problem Management** (Create, Edit, Delete for admins)
 - 📥 **Code Submission & Evaluation** (Docker isolated execution)
 - 🧠 **AI-powered Hints & Feedback** (using Gemini API)
-- 🏆 **Leaderboards & Friend Ratings**
 - 👥 **Friend System** (Add/Remove friends, view their profiles)
-- 🎯 **Contest Timer & Profile Badges**
 - 🌗 **Dark/Light Theme Toggle**
 - 🛠️ **Admin Panel** with full CRUD access
 
@@ -44,7 +42,7 @@ A full-stack Online Judge platform built with the **MERN stack** that allows use
 
 ## 🖼️ Screenshots
 
-### 🔸 Problems Page
+### 🔸 Problem Page
 ![Problems](screenshots/problem-page.png)
 
 ## 🛠️ Installation
