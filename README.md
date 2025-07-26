@@ -16,6 +16,13 @@ A full-stack Online Judge platform built with the **MERN stack** that allows use
 
 ---
 
+## 🧠 AI Features
+- Get Hint analyzes the problem description and gives a clue.
+- Get Code Feedback checks the logic and suggests improvements.
+- Get Time Complexity gives the Time Complexity of the submitted code
+
+---
+
 ## 🖼️ Demo
 
 - 🔗 Live Link: [https://codejury.info/](#)
