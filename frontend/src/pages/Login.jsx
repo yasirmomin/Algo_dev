@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import axios from "axios";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,12 +9,23 @@ function Login() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate("/");
+      axios
+        .get(`${import.meta.env.VITE_BACKEND_URL}/verify`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          console.log("Token is valid:", response.data);
+        })
+        .catch((error) => {
+          console.log("Token invalid or expired. Clearing storage.", error);
+          localStorage.clear();
+          window.location.href = "/login";
+        });
     }
   }, []);
 
