@@ -21,7 +21,7 @@ function Register() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      navigate("/"); // or "/home", "/dashboard" — wherever you want
+      navigate("/login"); 
     }
   }, []);
 
